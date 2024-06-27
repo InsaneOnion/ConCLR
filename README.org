@@ -1,0 +1,31 @@
+* Context-Based Contrastive Learning for Scene Text Recognition
+
+A code repository that attempts to implementation the [[https://ojs.aaai.org/index.php/AAAI/article/view/20245][ConCLR]] (AAAI 2022) (unofficial)
+
+** Runtime Environment
+install the dependencies
+#+begin_src shell
+pip install -r requirements.txt
+#+end_src
+
+** Detail
+*** ConAug
+
+*** Contrastive Loss
+\begin{aligned}
+\mathcal{L}_{\text {pair }}(\boldsymbol{T})= & \sum_{m \in M} \frac{-1}{|P(m)|} \left(\log\sum_{p \in P(m)} \exp \left(\boldsymbol{z}_m \cdot \boldsymbol{z}_p / \tau\right)\right. \\
+& \left.-\log \sum_{a \in A(m)} \exp \left(\boldsymbol{z}_m \cdot \boldsymbol{z}_a / \tau\right)\right),
+\end{aligned}
+
+\begin{aligned}
+\mathcal{L}_{c l r}=\frac{1}{N} \sum_{\boldsymbol{T} \in \boldsymbol{I}^{\text {aug }}} \mathcal{L}_{\text {pair }}(\boldsymbol{T})
+\end{aligned}
+
+** Training
+1. Pretrain ABINet-Vision-ConCLR model
+   #+begin_src shell
+   CUDA_VISIBLE_DEVICES=0,1,2,3 python main.py --config=configs/conclr_pretrain_vision_model.yaml
+   #+end_src
+
+** Conference
+[[https://github.com/FangShancheng/ABINet][FangShancheng/ABINet]]

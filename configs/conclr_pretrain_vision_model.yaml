@@ -1,0 +1,68 @@
+global:
+  name: conclr-pretrain-vision-model
+  phase: train
+  stage: conclr-pretrain-vision
+  workdir: workdir
+  seed: 3407
+  conclr: True
+ 
+dataset:
+  train: {
+    roots: [
+            # 'data/training/MJ/MJ_train/', 
+            # 'data/training/MJ/MJ_test/', 
+            # 'data/training/MJ/MJ_valid/', 
+            'data/training/ST'],
+    batch_size: 64
+  }
+  test: {
+    roots: [
+             'data/evaluation/IIIT5k_3000',
+            # 'data/evaluation/SVT', 
+            # 'data/evaluation/SVTP',
+             'data/evaluation/IC13_857',
+            # 'data/evaluation/IC15_1811',
+             'data/evaluation/CUTE80'
+            ],
+    batch_size: 384
+  }
+  data_aug: True
+  multiscales: False
+  num_workers: 20
+  conaug_type: "RandCat"
+
+training:
+  epochs: 4
+  show_iters: 50
+  eval_iters: 1000
+  save_iters: 1000
+  tau: 2
+  alpha: 0.2
+
+optimizer:
+  type: Adam
+  true_wd: False
+  wd: 0.0
+  bn_wd: False
+  clip_grad: 20
+  lr: 0.0001
+  args: {
+    betas: !!python/tuple [0.9, 0.999], # for default Adam 
+  }
+  scheduler: {
+    periods: [3, 1],
+    gamma: 0.1,
+  }
+
+model:
+  name: 'modules.model_conclr_vision.ConCLR_Vision'
+  # checkpoint: '/ABINet/workdir/conclr-pretrain-vision-model/conclr-pretrain-vision-model_0_12000.pth'
+  # checkpoint: "/home/onion/conclr/workdir/conclr-pretrain-vision-model/conclr-pretrain-vision-model_0_7000.pth"
+  checkpoint: ~
+  vision: {
+    loss_weight: [1.0, 0.5, 0.5],
+    attention: 'position',
+    backbone: 'transformer',
+    backbone_ln: 3,
+  }
+  embedding_channels: 512
