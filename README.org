@@ -12,14 +12,13 @@ pip install -r requirements.txt
 *** ConAug
 
 *** Contrastive Loss
-\begin{aligned}
-\mathcal{L}_{\text {pair }}(\boldsymbol{T})= & \sum_{m \in M} \frac{-1}{|P(m)|} \left(\log\sum_{p \in P(m)} \exp \left(\boldsymbol{z}_m \cdot \boldsymbol{z}_p / \tau\right)\right. \\
-& \left.-\log \sum_{a \in A(m)} \exp \left(\boldsymbol{z}_m \cdot \boldsymbol{z}_a / \tau\right)\right),
-\end{aligned}
+$$
+\mathcal{L} _ {pair}(\boldsymbol{T})= \sum _ {m \in M} \frac{-1}{|P(m)|} \left(\log\sum _ {p \in P(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ p / \tau\right)\right. \left.-\log\sum _ {a \in A(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ a / \tau\right)\right)
+$$
 
-\begin{aligned}
-\mathcal{L}_{c l r}=\frac{1}{N} \sum_{\boldsymbol{T} \in \boldsymbol{I}^{\text {aug }}} \mathcal{L}_{\text {pair }}(\boldsymbol{T})
-\end{aligned}
+$$
+\mathcal{L} _ {clr}=\frac{1}{N}\sum _ {T \in I^{aug}}\mathcal{L} _ {pair}(\boldsymbol{T})
+$$
 
 ** Training
 1. Pretrain ABINet-Vision-ConCLR model
