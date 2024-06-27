@@ -22,9 +22,9 @@ $$
 
 ** Training
 1. Pretrain ABINet-Vision-ConCLR model
-   #+begin_src shell
-   CUDA_VISIBLE_DEVICES=0,1,2,3 python main.py --config=configs/conclr_pretrain_vision_model.yaml
-   #+end_src
+#+begin_src shell
+CUDA_VISIBLE_DEVICES=0,1,2,3 python main.py --config=configs/conclr_pretrain_vision_model.yaml
+#+end_src
 
 ** Conference
 [[https://github.com/FangShancheng/ABINet][FangShancheng/ABINet]]
