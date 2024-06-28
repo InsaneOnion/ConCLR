@@ -10,12 +10,17 @@ pip install -r requirements.txt
 
 ** Detail
 *** ConAug
-#+ATTR_ORG: :width 450px :align center
-[[./fig/conaug.png]]
+#+BEGIN_HTML
+<div style="text-align: center;">
+  <img src="./fig/conaug.png" alt="conaug.png" style="width: 430px;">
+</div>
+#+END_HTML
 *** Contrastive Loss
-#+ATTR_ORG: :width 950px :align center
-[[./fig/contrastiveloss.png]]
-
+#+BEGIN_HTML
+<div style="text-align: center;">
+  <img src="./fig/contrastiveloss.png" alt="contrastiveloss.png" style="width: 800px;">
+</div>
+#+END_HTML
 $$
 \mathcal{L} _ {pair}(\boldsymbol{T})= \sum _ {m \in M} \frac{-1}{|P(m)|} \left(\log\sum _ {p \in P(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ p / \tau\right)\right. \left.-\log\sum _ {a \in A(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ a / \tau\right)\right)
 $$
@@ -38,15 +43,48 @@ constraints on time and computational resources, both models were trained on the
 ST dataset for 4 epochs using four NVIDIA 2080 Ti GPUs(on AutoDL🥹). The learning
 rate was initialized at 1e-4 and decayed to 1e-6 by the final epoch.
 
-| Model         | Dataset |   CCR |   CWR |
-|---------------+---------+-------+-------|
-|               | IIIT5k  | 0.923 | 0.836 |
-| conclr-vision | IC13    | 0.948 | 0.834 |
-|               | CUTE80  | 0.814 | 0.875 |
-|---------------+---------+-------+-------|
-|               | IIIT5k  | 0.926 | 0.872 |
-| abinet-vision | IC13    | 0.938 | 0.852 |
-|               | CUTE80  | 0.771 | 0.882 |
+#+BEGIN_HTML
+<table>
+  <tr>
+    <th>Model</th>
+    <th>Dataset</th>
+    <th>CCR</th>
+    <th>CWR</th>
+  </tr>
+  <tr>
+    <td rowspan="3" style="text-align: center;">conclr-vision</td>
+    <td>IIIT5k</td>
+    <td>0.923</td>
+    <td>0.836</td>
+  </tr>
+  <tr>
+    <td>IC13</td>
+    <td>0.948</td>
+    <td>0.834</td>
+  </tr>
+  <tr>
+    <td>CUTE80</td>
+    <td>0.814</td>
+    <td>0.875</td>
+  </tr>
+  <tr>
+    <td rowspan="3" style="text-align: center;">abinet-vision</td>
+    <td>IIIT5k</td>
+    <td>0.926</td>
+    <td>0.872</td>
+  </tr>
+  <tr>
+    <td>IC13</td>
+    <td>0.938</td>
+    <td>0.852</td>
+  </tr>
+  <tr>
+    <td>CUTE80</td>
+    <td>0.771</td>
+    <td>0.882</td>
+  </tr>
+</table>
+#+END_HTML
 
 From the results, using ConCLR has shown an improvement in CCR compared to the
 baseline. I attribute this to the effectiveness of contrastive loss and ConAug.
