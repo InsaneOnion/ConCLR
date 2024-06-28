@@ -207,6 +207,11 @@ class TotalLosses(nn.Module):
     def last_losses(self):
         return {
             "vision_loss": self.rec_loss.losses["vision_loss"],
+            "vision_aug1_loss": self.rec_loss.losses["vision_aug1_loss"],
+            "vision_aug2_loss": self.rec_loss.losses["vision_aug2_loss"],
+            "rec_loss": self.rec_loss.losses["vision_loss"]
+            + self.rec_loss.losses["vision_aug1_loss"]
+            + self.rec_loss.losses["vision_aug2_loss"],
             "clr_loss": self.clr_loss.losses["clr_loss"],
         }
 

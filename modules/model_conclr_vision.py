@@ -9,15 +9,15 @@ from modules.resnet import resnet45
 
 
 class ProjectionLayer(nn.Module):
-    def __init__(self, in_channel, out_channel, use_bn=True, use_relu=True) -> None:
+    def __init__(self, in_channel, out_channel, use_bn=True, use_act=True) -> None:
         super().__init__()
         self.fc = nn.Linear(in_channel, out_channel)
         self.use_bn = use_bn
-        self.use_relu = use_relu
+        self.use_act = use_act
         if self.use_bn:
             self.norm = nn.BatchNorm1d(out_channel)
-        if self.use_relu:
-            self.act = nn.ReLU()
+        if self.use_act:
+            self.act = nn.Sigmoid()
 
     def forward(self, x):
         embed = self.fc(x)
@@ -27,7 +27,7 @@ class ProjectionLayer(nn.Module):
                 .permute(0, 2, 1)
                 .contiguous()
             )
-        if self.use_relu:
+        if self.use_act:
             embed = self.act(embed)
         return embed
 
@@ -67,6 +67,7 @@ class ConCLR_Vision(Model):
 
     def forward(self, images, *args):
         rec_out, clr_out = [[] for _ in range(2)]
+        name = ["vision", "vision_aug1", "vision_aug2"]
 
         if isinstance(images, (tuple, list)):
             for idx, image in enumerate(images):
@@ -84,7 +85,7 @@ class ConCLR_Vision(Model):
                         "pt_lengths": pt_lengths,
                         "attn_scores": attn_scores,
                         "loss_weight": self.loss_weight[idx],
-                        "name": "vision",
+                        "name": name[idx],
                     }
                 )
 
