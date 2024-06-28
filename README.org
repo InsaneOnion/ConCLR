@@ -51,6 +51,7 @@ Because ConAug need to process the input data after organizing it into batch
 data and before feeding it into the model, I use the Callback mechanism of the
 fastai to implement it. I implemented the "on_batch_begin" method which will be
 called before the batch feeding into model. Here is my implement code:
+
 #+begin_src python
 class ConAugPretransform(Callback):
     def __init__(self, *args, **kwargs):
@@ -130,9 +131,18 @@ class ConAugPretransform(Callback):
 
         return {"last_input": last_input, "last_target": last_target}
 #+end_src
-In this method, I process the augmented batch and its label together. (the
-augmented batch is also used to calculate recognition loss)
+
+In this function, I process the augmented batch and its label together. (the
+augmented batch is also used to calculate recognition loss so process the label
+is necessary)
 *** Projection Head
+Feed the two augmented batch into the backbone and decoder, we obtained their
+corresponding glimpse vectors. The author mentions that [[https://arxiv.org/abs/2002.05709][SimCLR]] proposes to
+utilize embeddings directly for contrastive learning will harm to the model
+performance，thereby necessitating a projection head to filter out irrelevant
+information. Additionally, I noted that SimCLR discusses the benefits of
+incorporating non-linear layers in the projection head to enhance performance.
+Consequently, I implemented the head using the following code.
 #+begin_src python
 class ProjectionHead(nn.Module):
     def __init__(self, in_channel, out_channel, use_bn=True, use_act=True) -> None:
@@ -157,12 +167,12 @@ class ProjectionHead(nn.Module):
             embed = self.act(embed)
         return embed
 #+end_src
-*** Contrastive Loss
-By ConAug, we have obtained different context by simply concatenate images, then
-how could we do the "pulling together embeddings of the same character in
-different contexts and pushing apart embeddings of different characters"? The
-anwser is the Contrastive Loss.
 
+*** Contrastive Loss
+By ConAug、Backbone and the Projection Head, we have obtained two embeddings
+corresponding the two augmented batches, and now how could we do the "pulling
+together embeddings of the same character in different contexts and pushing
+apart embeddings of different characters"? The anwser is the Contrastive Loss.
 #+BEGIN_HTML
 <div style="text-align: center;">
   <img src="./fig/contrastiveloss.png" alt="contrastiveloss.png" style="width: 800px;">
@@ -180,7 +190,7 @@ $$
 $$
 
 I won’t go into details about the meaning of the letters in the specific formula
-here, it can be found in the paper.
+here, it can be found in the paper. My code is implemented as follows.
 
 #+begin_src python
 class ContrastiveLoss(nn.Module):
@@ -229,6 +239,17 @@ class ContrastiveLoss(nn.Module):
         self.losses = {}
         return self._clr_loss(X[0], Y, Y_length, *args)
 #+end_src
+
+To improve parallel computation efficiency, I compute the contrastive loss
+directly across the entire batch. First, I concatenate two embeddings along the
+second dimension to obtain $z$. Then, by performing $z @ z^{T} / \tau$,I matrix-ify
+the step of computing dot products in the formula. This yields a matrix $s$ of
+shape (batchsize, max_length, max_length), where each element $s_{ij}$
+represents $z_{}i⋅z_{}j​$​. By applying masks and performing a logsumexp
+operation, we obtain an equivalent result to the loss function. In practical
+scenarios, some rows in matrix $s$ may be fully masked, resulting in logsumexp
+values of inf. During the final loss computation, these are masked with a very
+small value.
 
 ** Result
 
