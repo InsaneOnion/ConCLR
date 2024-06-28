@@ -133,6 +133,30 @@ class ConAugPretransform(Callback):
 In this method, I process the augmented batch and its label together. (the
 augmented batch is also used to calculate recognition loss)
 *** Projection Head
+#+begin_src python
+class ProjectionHead(nn.Module):
+    def __init__(self, in_channel, out_channel, use_bn=True, use_act=True) -> None:
+        super().__init__()
+        self.fc = nn.Linear(in_channel, out_channel)
+        self.use_bn = use_bn
+        self.use_act = use_act
+        if self.use_bn:
+            self.norm = nn.BatchNorm1d(out_channel)
+        if self.use_act:
+            self.act = nn.Sigmoid()
+
+    def forward(self, x):
+        embed = self.fc(x)
+        if self.use_bn:
+            embed = (
+                self.norm(embed.permute(0, 2, 1).contiguous())
+                .permute(0, 2, 1)
+                .contiguous()
+            )
+        if self.use_act:
+            embed = self.act(embed)
+        return embed
+#+end_src
 *** Contrastive Loss
 By ConAug, we have obtained different context by simply concatenate images, then
 how could we do the "pulling together embeddings of the same character in
@@ -158,6 +182,53 @@ $$
 I won’t go into details about the meaning of the letters in the specific formula
 here, it can be found in the paper.
 
+#+begin_src python
+class ContrastiveLoss(nn.Module):
+    def __init__(self, tau):
+        super().__init__()
+        self.tau = tau
+
+    def _clr_loss(self, X, Y, idx=None, record=True):
+        X, loss_name = X.get("proj"), X.get("name")
+        Z = torch.cat(X, dim=1)  # (batch_size, max_length, embedding_dim)
+        Y_aug = torch.cat(Y, dim=1)  # (batch_size, max_length, charset_length)
+
+        # Determine indices where characters are not end-of-sequence
+        not_end = torch.all(
+            Y_aug == Y_aug[:, -1:], dim=2
+        ).cuda()  # (batch_size, max_length)
+
+        # Create mask
+        eq_indices = (
+            torch.any(Y_aug[:, :, None] != Y_aug[:, None, :], dim=3)
+            | not_end[:, :, None]
+        )
+
+        diag_mask = torch.eye(Y_aug.shape[1], dtype=torch.bool).cuda()
+        a_mask = diag_mask[None, :, :].expand_as(eq_indices) | not_end[:, :, None]
+
+        p_mask = eq_indices | a_mask
+
+        s = torch.matmul(Z, Z.transpose(1, 2)) / self.tau
+        pm_length = p_mask.sum(dim=2) + 1
+
+        p = torch.logsumexp(s.masked_fill(p_mask, -float("inf")), dim=1)
+        a = torch.logsumexp(s.masked_fill(a_mask, -float("inf")), dim=1)
+        loss = torch.mean(
+            -torch.sum(
+                (p.masked_fill(p == -float("inf"), 1e-9) - a) / pm_length,
+                dim=1,
+            ),
+            dim=0,
+        )
+        if record and loss_name is not None:
+            self.losses[f"{loss_name}_loss"] = loss
+        return loss
+
+    def forward(self, X, Y, Y_length, *args):
+        self.losses = {}
+        return self._clr_loss(X[0], Y, Y_length, *args)
+#+end_src
 
 ** Result
 

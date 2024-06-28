@@ -8,7 +8,7 @@ from modules.model import Model
 from modules.resnet import resnet45
 
 
-class ProjectionLayer(nn.Module):
+class ProjectionHead(nn.Module):
     def __init__(self, in_channel, out_channel, use_bn=True, use_act=True) -> None:
         super().__init__()
         self.fc = nn.Linear(in_channel, out_channel)
@@ -63,7 +63,7 @@ class ConCLR_Vision(Model):
             logging.info(f"Read vision model from {config.model_vision_checkpoint}.")
             self.load(config.model_vision_checkpoint)
 
-        self.projection_head = ProjectionLayer(self.out_channels, 512)
+        self.projection_head = ProjectionHead(self.out_channels, self.embed_channels)
 
     def forward(self, images, *args):
         rec_out, clr_out = [[] for _ in range(2)]
