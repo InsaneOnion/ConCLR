@@ -15,7 +15,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 python main.py --config=configs/conclr_pretrain_vis
 #+end_src
 
 ** Evaluation
-1. Pretrain ABINet-Vision-ConCLR model
+1. Evaluate ABINet-Vision-ConCLR model
 #+begin_src shell
 CUDA_VISIBLE_DEVICES=0 python main.py --config=configs/conclr_pretrain_vision_model.yaml --phase test --image_only
 #+end_src
@@ -143,7 +143,7 @@ class ProjectionHead(nn.Module):
         if self.use_bn:
             self.norm = nn.BatchNorm1d(out_channel)
         if self.use_act:
-            self.act = nn.Sigmoid()
+            self.act = nn.ReLU()
 
     def forward(self, x):
         embed = self.fc(x)
