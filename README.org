@@ -178,7 +178,7 @@ rate was initialized at 1e-4 and decayed to 1e-6 by the final epoch.
   <tr>
     <td rowspan="3" style="text-align: center;">conclr-vision</td>
     <td>IIIT5k</td>
-    <td>0.923</td>
+    <td>0.943</td>
     <td>0.836</td>
   </tr>
   <tr>
