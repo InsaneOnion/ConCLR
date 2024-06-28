@@ -10,8 +10,12 @@ pip install -r requirements.txt
 
 ** Detail
 *** ConAug
-
+#+ATTR_ORG: :width 450px :align center
+[[./fig/conaug.png]]
 *** Contrastive Loss
+#+ATTR_ORG: :width 950px :align center
+[[./fig/contrastiveloss.png]]
+
 $$
 \mathcal{L} _ {pair}(\boldsymbol{T})= \sum _ {m \in M} \frac{-1}{|P(m)|} \left(\log\sum _ {p \in P(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ p / \tau\right)\right. \left.-\log\sum _ {a \in A(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ a / \tau\right)\right)
 $$
@@ -25,6 +29,33 @@ $$
 #+begin_src shell
 CUDA_VISIBLE_DEVICES=0,1,2,3 python main.py --config=configs/conclr_pretrain_vision_model.yaml
 #+end_src
+
+** Result
+
+For model evaluation to demonstrate effectiveness of reproduction, I trained the
+ConCLR-Vision and ABInet-Vision models using same training settings. Due to
+constraints on time and computational resources, both models were trained on the
+ST dataset for 4 epochs using four NVIDIA 2080 Ti GPUs(on AutoDL🥹). The learning
+rate was initialized at 1e-4 and decayed to 1e-6 by the final epoch.
+
+| Model         | Dataset |   CCR |   CWR |
+|---------------+---------+-------+-------|
+| conclr-vision | IIIT5k  | 0.923 | 0.836 |
+|               | IC13    | 0.948 | 0.834 |
+|               | CUTE80  | 0.814 | 0.875 |
+|---------------+---------+-------+-------|
+| abinet-vision | IIIT5k  | 0.926 | 0.872 |
+|               | IC13    | 0.938 | 0.852 |
+|               | CUTE80  | 0.771 | 0.882 |
+
+From the results, using ConCLR has shown an improvement in CCR compared to the
+baseline. I attribute this to the effectiveness of contrastive loss and ConAug.
+However, the performance of CWR metrics was not satisfactory, possibly due to
+the small size of the training dataset. Typically, methods involving contrastive
+learning require larger datasets and more training time for optimization.
+(Alternatively, there might be errors in my implementation, and I would greatly
+appreciate any feedback on this matter🥰) More comprehensive experiments and
+replications are underway...
 
 ** Conference
 [[https://github.com/FangShancheng/ABINet][FangShancheng/ABINet]]
