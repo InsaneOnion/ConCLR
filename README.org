@@ -8,39 +8,162 @@ install the dependencies
 pip install -r requirements.txt
 #+end_src
 
-** Detail
-*** ConAug
-#+BEGIN_HTML
-<div style="text-align: center;">
-  <img src="./fig/conaug.png" alt="conaug.png" style="width: 430px;">
-</div>
-#+END_HTML
-*** Contrastive Loss
-#+BEGIN_HTML
-<div style="text-align: center;">
-  <img src="./fig/contrastiveloss.png" alt="contrastiveloss.png" style="width: 800px;">
-</div>
-#+END_HTML
-$$
-\mathcal{L} _ {pair}(\boldsymbol{T})= \sum _ {m \in M} \frac{-1}{|P(m)|} \left(\log\sum _ {p \in P(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ p / \tau\right)\right. \left.-\log\sum _ {a \in A(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ a / \tau\right)\right)
-$$
-
-$$
-\mathcal{L} _ {clr}=\frac{1}{N}\sum _ {T \in I^{aug}}\mathcal{L} _ {pair}(\boldsymbol{T})
-$$
-
 ** Training
 1. Pretrain ABINet-Vision-ConCLR model
 #+begin_src shell
 CUDA_VISIBLE_DEVICES=0,1,2,3 python main.py --config=configs/conclr_pretrain_vision_model.yaml
 #+end_src
 
+** Evaluation
+1. Pretrain ABINet-Vision-ConCLR model
+#+begin_src shell
+CUDA_VISIBLE_DEVICES=0 python main.py --config=configs/conclr_pretrain_vision_model.yaml --phase test --image_only
+#+end_src
+
+** Run Demo
+#+BEGIN_SRC shell
+python demo.py --config=configs/train_abinet.yaml --input=figs/test
+#+END_SRC
+
+Additional flags:
+- `--config /path/to/config` set the path of configuration file
+- `--input /path/to/image-directory` set the path of image directory or wildcard path, e.g, `--input='figs/test/*.png'`
+- `--checkpoint /path/to/checkpoint` set the path of trained model
+- `--cuda [-1|0|1|2|3...]` set the cuda id, by default -1 is set and stands for cpu
+- `--model_eval [alignment|vision]` which sub-model to use
+- `--image_only` disable dumping visualization of attention masks
+
+** Detail
+The authors' key insight is that by pulling together embeddings of the same
+character in different contexts and pushing apart embeddings of different
+characters, we can guide models to learn a representation better balances the
+intrinsic and context information. Here are some key components of the ConCLR.
+*** Context-based Data Augmentation
+Before feeding the batch data into the model, Context-based Data Augmentation
+(ConAug) randomly permutes the input batch twice and randomly concatenates it to
+the left or right of the original batch. As shown in figure below:
+#+BEGIN_HTML
+<div style="text-align: center;">
+  <img src="./fig/conaug.png" alt="conaug.png" style="width: 430px;">
+</div>
+#+END_HTML
+Because ConAug need to process the input data after organizing it into batch
+data and before feeding it into the model, I use the Callback mechanism of the
+fastai to implement it. I implemented the "on_batch_begin" method which will be
+called before the batch feeding into model. Here is my implement code:
+#+begin_src python
+class ConAugPretransform(Callback):
+    def __init__(self, *args, **kwargs):
+        self.max_length = kwargs["max_length"]
+
+    def _augment_images(self, images, permuted_indices, left):
+        permuted_images = images[permuted_indices]
+        augmented_images = torch.cat(
+            [permuted_images if left else images, images if left else permuted_images],
+            dim=3,
+        )
+        original_height, original_width = images.size(2), images.size(3)
+        augmented_images = F.interpolate(
+            augmented_images,
+            size=(original_height, original_width),
+            mode="bilinear",
+            align_corners=False,
+        )
+        return augmented_images
+
+    def _process_gt_labels(self, gt_labels, gt_lengths, permuted_indices, left):
+        new_gt_labels = gt_labels.clone()
+        new_gt_lengths = gt_lengths.clone()
+        for i, perm in enumerate(permuted_indices):
+            if left:
+                new_gt = torch.cat(
+                    (
+                        gt_labels[perm][: gt_lengths[perm] - 1],
+                        gt_labels[i][: self.max_length + 2 - gt_lengths[perm] - 1],
+                        torch.unsqueeze(gt_labels[perm][-1], dim=0),
+                    ),
+                    dim=0,
+                )
+            else:
+                new_gt = torch.cat(
+                    (
+                        gt_labels[i][: gt_lengths[i] - 1],
+                        gt_labels[perm][: self.max_length + 2 - gt_lengths[i] - 1],
+                        torch.unsqueeze(gt_labels[i][-1], dim=0),
+                    ),
+                    dim=0,
+                )
+            new_gt_labels[i] = new_gt
+        new_gt_lengths += new_gt_lengths[permuted_indices] - 1
+        new_gt_lengths = torch.minimum(
+            new_gt_lengths, torch.tensor(self.max_length + 1)
+        )
+        return new_gt_labels, new_gt_lengths
+
+    def on_batch_begin(self, last_input, last_target, **kwargs) -> dict:
+        images = last_input[0]
+        permuted_indices_one = torch.randperm(images.size(0))
+        permuted_indices_two = torch.randperm(images.size(0))
+
+        left_one = torch.randint(0, 2, (1,), dtype=torch.bool)
+        left_two = torch.randint(0, 2, (1,), dtype=torch.bool)
+
+        augmented_batch_one = self._augment_images(
+            images, permuted_indices_one, left_one
+        )
+        augmented_batch_two = self._augment_images(
+            images, permuted_indices_two, left_two
+        )
+
+        last_input = ((images, augmented_batch_one, augmented_batch_two), last_input[1])
+
+        gt_labels, gt_lengths = last_target[0], last_target[1]
+        gt_labels_one, gt_lengths_one = self._process_gt_labels(
+            gt_labels, gt_lengths, permuted_indices_one, left_one
+        )
+        gt_labels_two, gt_lengths_two = self._process_gt_labels(
+            gt_labels, gt_lengths, permuted_indices_two, left_two
+        )
+
+        last_target[0] = [gt_labels, gt_labels_one, gt_labels_two]
+        last_target[1] = [gt_lengths, gt_lengths_one, gt_lengths_two]
+
+        return {"last_input": last_input, "last_target": last_target}
+#+end_src
+In this method, I process the augmented batch and its label together. (the
+augmented batch is also used to calculate recognition loss)
+*** Projection Head
+*** Contrastive Loss
+By ConAug, we have obtained different context by simply concatenate images, then
+how could we do the "pulling together embeddings of the same character in
+different contexts and pushing apart embeddings of different characters"? The
+anwser is the Contrastive Loss.
+
+#+BEGIN_HTML
+<div style="text-align: center;">
+  <img src="./fig/contrastiveloss.png" alt="contrastiveloss.png" style="width: 800px;">
+</div>
+#+END_HTML
+Here are the formulate (since there is an obvious clerical error in the formula
+in the paper, I have corrected it here):
+
+$$
+\mathcal{L} _ {pair}(\boldsymbol{T})= \sum _ {m \in M} \frac{-1}{|P(m)|} \left(\log\sum _ {p \in P(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ p / \tau\right)\right. \left.-\log\sum _ {a \in A(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ a / \tau\right)\right)
+$$
+$$
+\mathcal{L} _ {clr}=\frac{1}{N}\sum _ {T \in I^{aug}}\mathcal{L} _ {pair}(\boldsymbol{T})
+$$
+
+I won’t go into details about the meaning of the letters in the specific formula
+here, it can be found in the paper.
+
+
 ** Result
 
 For model evaluation to demonstrate effectiveness of reproduction, I trained the
 ConCLR-Vision and ABInet-Vision models using same training settings. Due to
 constraints on time and computational resources, both models were trained on the
-ST dataset for 4 epochs using four NVIDIA 2080 Ti GPUs(on AutoDL🥹). The learning
+ST dataset for 4 epochs using four NVIDIA 2080 Ti GPUs (on AutoDL 🥲). The learning
 rate was initialized at 1e-4 and decayed to 1e-6 by the final epoch.
 
 #+BEGIN_HTML
@@ -92,8 +215,9 @@ However, the performance of CWR metrics was not satisfactory, possibly due to
 the small size of the training dataset. Typically, methods involving contrastive
 learning require larger datasets and more training time for optimization.
 (Alternatively, there might be errors in my implementation, and I would greatly
-appreciate any feedback on this matter🥰) More comprehensive experiments and
-replications are underway...
+appreciate any feedback on this matter 🥰)
+
+More comprehensive experiments are underway...
 
 ** Conference
 [[https://github.com/FangShancheng/ABINet][FangShancheng/ABINet]]
