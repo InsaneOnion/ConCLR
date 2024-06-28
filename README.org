@@ -40,12 +40,12 @@ rate was initialized at 1e-4 and decayed to 1e-6 by the final epoch.
 
 | Model         | Dataset |   CCR |   CWR |
 |---------------+---------+-------+-------|
-| conclr-vision | IIIT5k  | 0.923 | 0.836 |
-|               | IC13    | 0.948 | 0.834 |
+|               | IIIT5k  | 0.923 | 0.836 |
+| conclr-vision | IC13    | 0.948 | 0.834 |
 |               | CUTE80  | 0.814 | 0.875 |
 |---------------+---------+-------+-------|
-| abinet-vision | IIIT5k  | 0.926 | 0.872 |
-|               | IC13    | 0.938 | 0.852 |
+|               | IIIT5k  | 0.926 | 0.872 |
+| abinet-vision | IC13    | 0.938 | 0.852 |
 |               | CUTE80  | 0.771 | 0.882 |
 
 From the results, using ConCLR has shown an improvement in CCR compared to the
