@@ -22,16 +22,16 @@ CUDA_VISIBLE_DEVICES=0 python main.py --config=configs/conclr_pretrain_vision_mo
 
 ** Run Demo
 #+BEGIN_SRC shell
-python demo.py --config=configs/train_abinet.yaml --input=figs/test
-#+END_SRC
+python demo.py --config=configs/conclr_pretrain_vision_model.yaml --input=test/img/path
 
 Additional flags:
-- `--config /path/to/config` set the path of configuration file
-- `--input /path/to/image-directory` set the path of image directory or wildcard path, e.g, `--input='figs/test/*.png'`
-- `--checkpoint /path/to/checkpoint` set the path of trained model
-- `--cuda [-1|0|1|2|3...]` set the cuda id, by default -1 is set and stands for cpu
-- `--model_eval [alignment|vision]` which sub-model to use
-- `--image_only` disable dumping visualization of attention masks
+--config /path/to/config :: Set the path of configuration file
+--input /path/to/image-directory :: Set the path of image directory or wildcard path
+--checkpoint /path/to/checkpoint :: Set the path of trained model
+--cuda [-1|0|1|2|3...] :: Set the cuda id, by default -1 is set and stands for cpu
+--model_eval [alignment|vision] :: Specify which sub-model to use
+--image_only :: Disable dumping visualization of attention masks
+#+END_SRC
 
 ** Detail
 The authors' key insight is that by pulling together embeddings of the same
@@ -150,6 +150,7 @@ in the paper, I have corrected it here):
 $$
 \mathcal{L} _ {pair}(\boldsymbol{T})= \sum _ {m \in M} \frac{-1}{|P(m)|} \left(\log\sum _ {p \in P(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ p / \tau\right)\right. \left.-\log\sum _ {a \in A(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ a / \tau\right)\right)
 $$
+
 $$
 \mathcal{L} _ {clr}=\frac{1}{N}\sum _ {T \in I^{aug}}\mathcal{L} _ {pair}(\boldsymbol{T})
 $$
