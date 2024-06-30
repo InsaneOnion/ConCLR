@@ -2,8 +2,6 @@
 
 A code repository that attempts to implementation the [[https://ojs.aaai.org/index.php/AAAI/article/view/20245][ConCLR]] (AAAI 2022) (unofficial)
 
-*Sorry, I make a mistake in contrastive loss！Urgent, under modification now！！*
-
 ** Runtime Environment
 install the dependencies
 #+begin_src shell
@@ -188,50 +186,85 @@ here, it can be found in the paper. My code is implemented as follows.
 
 #+begin_src python
 class ContrastiveLoss(nn.Module):
-    def __init__(self, tau):
+    def __init__(self, temprature=2):
         super().__init__()
-        self.tau = tau
+        self.temprature = temprature
 
-    def _clr_loss(self, X, Y, idx=None, record=True):
-        X, loss_name = X.get("proj"), X.get("name")
-        Z = torch.cat(X, dim=1)  # (batch_size, max_length, embedding_dim)
-        Y_aug = torch.cat(Y, dim=1)  # (batch_size, max_length, charset_length)
+    def _clr_loss(self, logits1, logits2, labels1, labels2, loss_name, record=True):
+        # Concatenate logits and labels
+        concatenated_logits = torch.cat((logits1, logits2), dim=1)
+        concatenated_labels = torch.cat((labels1, labels2), dim=1)
 
-        # Determine indices where characters are not end-of-sequence
-        not_end = torch.all(
-            Y_aug == Y_aug[:, -1:], dim=2
-        ).cuda()  # (batch_size, max_length)
+        b, max_length = concatenated_labels.shape
+        # Create attention mask and positive mask
+        attention_mask = (
+            ~torch.eye(max_length, dtype=torch.bool)
+            .unsqueeze(0)
+            .expand(b, -1, -1)
+            .cuda()
+        )  # mask for not considering self-attention
 
-        # Create mask
-        eq_indices = (
-            torch.any(Y_aug[:, :, None] != Y_aug[:, None, :], dim=3)
-            | not_end[:, :, None]
+        positive_mask = (
+            concatenated_labels[:, :, None] != concatenated_labels[:, None, :]
+        ) & attention_mask  # mask for considering positive examples
+
+        # Count number of positive pairs and create mask for no positive pairs
+        positive_pairs_count = positive_mask.sum(dim=1).unsqueeze(2)
+        no_positive_mask = (
+            attention_mask
+            & positive_pairs_count.expand(b, max_length, max_length).bool()
         )
 
-        diag_mask = torch.eye(Y_aug.shape[1], dtype=torch.bool).cuda()
-        a_mask = diag_mask[None, :, :].expand_as(eq_indices) | not_end[:, :, None]
-
-        p_mask = eq_indices | a_mask
-
-        s = torch.matmul(Z, Z.transpose(1, 2)) / self.tau
-        pm_length = p_mask.sum(dim=2) + 1
-
-        p = torch.logsumexp(s.masked_fill(p_mask, -float("inf")), dim=1)
-        a = torch.logsumexp(s.masked_fill(a_mask, -float("inf")), dim=1)
-        loss = torch.mean(
-            -torch.sum(
-                (p.masked_fill(p == -float("inf"), 1e-9) - a) / pm_length,
-                dim=1,
-            ),
-            dim=0,
+        # Calculate similarity matrix
+        similarity_matrix = torch.div(
+            concatenated_logits @ concatenated_logits.transpose(2, 1), self.temperature
         )
+        similarity_matrix = torch.masked_fill(
+            similarity_matrix, ~no_positive_mask, 0
+        )  # mask no positive pairs
+        similarity_matrix = torch.exp(
+            similarity_matrix - similarity_matrix.max(dim=2, keepdim=True)[0]
+        )  # prevent overflow
+
+        # Apply masks to similarity matrix
+        positive_similarity = torch.masked_fill(similarity_matrix, ~positive_mask, 0)
+        attention_similarity = torch.masked_fill(similarity_matrix, ~attention_mask, 0)
+        attention_similarity = torch.masked_fill(
+            attention_similarity, ~no_positive_mask, 0
+        ).sum(dim=2)
+        attention_similarity = torch.where(
+            attention_similarity != 0, torch.log(attention_similarity), 0
+        )
+
+        # Calculate contrastive loss
+        contrastive_loss_matrix = torch.where(
+            positive_similarity != 0,
+            positive_similarity - attention_similarity.unsqueeze(2),
+            0,
+        )
+        loss_per_example = torch.sum(
+            -torch.sum(contrastive_loss_matrix, dim=2) / positive_pairs_count.squeeze(),
+            dim=1,
+        )
+        loss = torch.mean(loss_per_example, dim=0)
+
+        # Record loss if specified
         if record and loss_name is not None:
             self.losses[f"{loss_name}_loss"] = loss
+
         return loss
 
-    def forward(self, X, Y, Y_length, *args):
+    def forward(self, X, Y, *args):
         self.losses = {}
-        return self._clr_loss(X[0], Y, Y_length, *args)
+        features, loss_name = X[0].get("proj"), X[0].get("name")
+        return self._clr_loss(
+            features[0],
+            features[1],
+            torch.argmax(Y[0], dim=2),
+            torch.argmax(Y[1], dim=2),
+            loss_name,
+            *args,
+        )
 #+end_src
 
 To improve parallel computation efficiency, I compute the contrastive loss
