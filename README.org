@@ -147,26 +147,19 @@ incorporating non-linear layers in the projection head to enhance performance.
 Consequently, I implemented the head using the following code.
 #+begin_src python
 class ProjectionHead(nn.Module):
-    def __init__(self, in_channel, out_channel, use_bn=True, use_act=True) -> None:
+    def __init__(self, in_channel, out_channel, head="mlp") -> None:
         super().__init__()
-        self.fc = nn.Linear(in_channel, out_channel)
-        self.use_bn = use_bn
-        self.use_act = use_act
-        if self.use_bn:
-            self.norm = nn.BatchNorm1d(out_channel)
-        if self.use_act:
-            self.act = nn.Sigmoid()
+        if head == "linear":
+            self.head = nn.Linear(in_channel, out_channel)
+        if head == "mlp":
+            self.head = nn.Sequential(
+                nn.Linear(in_channel, in_channel),
+                nn.ReLU(inplace=True),
+                nn.Linear(in_channel, out_channel),
+            )
 
     def forward(self, x):
-        embed = self.fc(x)
-        if self.use_bn:
-            embed = (
-                self.norm(embed.permute(0, 2, 1).contiguous())
-                .permute(0, 2, 1)
-                .contiguous()
-            )
-        if self.use_act:
-            embed = self.act(embed)
+        embed = F.normalize(self.head(x), dim=1)
         return embed
 #+end_src
 
@@ -180,11 +173,10 @@ apart embeddings of different characters"? The anwser is the Contrastive Loss.
   <img src="./fig/contrastiveloss.png" alt="contrastiveloss.png" style="width: 800px;">
 </div>
 #+END_HTML
-Here are the formulate (since there is an obvious clerical error in the formula
-in the paper, I have corrected it here):
+Here are the formulate:
 
 $$
-\mathcal{L} _ {pair}(\boldsymbol{T})= \sum _ {m \in M} \frac{-1}{|P(m)|} \left(\log\sum _ {p \in P(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ p / \tau\right)\right. \left.-\log\sum _ {a \in A(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ a / \tau\right)\right)
+\mathcal{L} _ {pair}(\boldsymbol{T})= \sum _ {m \in M} \frac{-1}{|P(m)|} \sum _ {p \in P(m)} \left (\log \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ p / \tau\right) \left.-\log\sum _ {a \in A(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ a / \tau\right)\right)
 $$
 
 $$

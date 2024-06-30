@@ -1,5 +1,6 @@
 import logging
 import torch.nn as nn
+import torch.functional as F
 from fastai.vision import *
 
 from modules.attention import *
@@ -9,26 +10,19 @@ from modules.resnet import resnet45
 
 
 class ProjectionHead(nn.Module):
-    def __init__(self, in_channel, out_channel, use_bn=True, use_act=True) -> None:
+    def __init__(self, in_channel, out_channel, head="mlp") -> None:
         super().__init__()
-        self.fc = nn.Linear(in_channel, out_channel)
-        self.use_bn = use_bn
-        self.use_act = use_act
-        if self.use_bn:
-            self.norm = nn.BatchNorm1d(out_channel)
-        if self.use_act:
-            self.act = nn.Sigmoid()
+        if head == "linear":
+            self.head = nn.Linear(in_channel, out_channel)
+        if head == "mlp":
+            self.head = nn.Sequential(
+                nn.Linear(in_channel, in_channel),
+                nn.ReLU(inplace=True),
+                nn.Linear(in_channel, out_channel),
+            )
 
     def forward(self, x):
-        embed = self.fc(x)
-        if self.use_bn:
-            embed = (
-                self.norm(embed.permute(0, 2, 1).contiguous())
-                .permute(0, 2, 1)
-                .contiguous()
-            )
-        if self.use_act:
-            embed = self.act(embed)
+        embed = F.normalize(self.head(x), dim=1)
         return embed
 
 
