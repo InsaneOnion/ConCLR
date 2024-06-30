@@ -169,6 +169,8 @@ class ProjectionHead(nn.Module):
 #+end_src
 
 *** Contrastive Loss
+*Sorry, I make a mistake here, The formula in the paper is correct！Urgent, under modification！！*
+
 By ConAug、Backbone、Decoder and the Projection Head, we have obtained two embeddings
 corresponding the two augmented batches, and now how could we do the "pulling
 together embeddings of the same character in different contexts and pushing
