@@ -174,7 +174,7 @@ apart embeddings of different characters"? The anwser is the Contrastive Loss.
 Here are the formulate:
 
 $$
-\mathcal{L} _ {pair}(\boldsymbol{T})= \sum _ {m \in M} \frac{-1}{|P(m)|} \sum _ {p \in P(m)} \left (\log \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ p / \tau\right) \left.-\log\sum _ {a \in A(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ a / \tau\right)\right)
+\mathcal{L} _ {pair}(\boldsymbol{T})=\sum _ {m \in M} \frac{-1}{|P(m)|}\sum _ {p \in P(m)} \left(\log \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ p / \tau\right) -\log\sum _ {a \in A(m)} \exp \left(\boldsymbol{z} _ m \cdot \boldsymbol{z} _ a / \tau\right)\right)
 $$
 
 $$
