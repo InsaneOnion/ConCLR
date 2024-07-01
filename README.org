@@ -9,13 +9,13 @@ pip install -r requirements.txt
 #+end_src
 
 ** Training
-1. Pretrain ABINet-Vision-ConCLR model
+Train ABINet-Vision-ConCLR model
 #+begin_src shell
 CUDA_VISIBLE_DEVICES=0,1,2,3 python main.py --config=configs/conclr_pretrain_vision_model.yaml
 #+end_src
 
 ** Evaluation
-1. Evaluate ABINet-Vision-ConCLR model
+Evaluate ABINet-Vision-ConCLR model
 #+begin_src shell
 CUDA_VISIBLE_DEVICES=0 python main.py --config=configs/conclr_pretrain_vision_model.yaml --phase test --image_only
 #+end_src
