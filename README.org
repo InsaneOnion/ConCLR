@@ -158,17 +158,17 @@ is necessary)
 I plotted the results of conaug to verify the correctness of my implementation, as follows:
 #+BEGIN_HTML
 <div style="text-align: center;">
-  <img src="./fig/aug1.png" alt="conaug.png" style="width: 430px;">
+  <img src="./fig/aug1.png" alt="conaug.png" style="width: 1000px;">
 </div>
 #+END_HTML
 #+BEGIN_HTML
 <div style="text-align: center;">
-  <img src="./fig/aug2.png" alt="conaug.png" style="width: 430px;">
+  <img src="./fig/aug2.png" alt="conaug.png" style="width: 1000px;">
 </div>
 #+END_HTML
 #+BEGIN_HTML
 <div style="text-align: center;">
-  <img src="./fig/aug3.png" alt="conaug.png" style="width: 430px;">
+  <img src="./fig/aug3.png" alt="conaug.png" style="width: 1000px;">
 </div>
 #+END_HTML
 
