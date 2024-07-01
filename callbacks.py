@@ -458,6 +458,8 @@ class ConAugPretransform(Callback):
     def __init__(self, *args, **kwargs):
         self.aug_type = kwargs["aug_type"]
         self.max_length = kwargs["max_length"]
+        self.test_conaug = kwargs["test_conaug"]
+        self.charset_path = kwargs["charset_path"]
 
     def _augment_images(self, images, permuted_indices, left):
         permuted_images = images[permuted_indices]
@@ -473,6 +475,49 @@ class ConAugPretransform(Callback):
             align_corners=False,
         )
         return augmented_images
+
+    def _visualize_augmented_batch(self, x, x1, x2, y, y1, y2, yl, yl1, yl2):
+        from utils import CharsetMapper
+
+        charset = CharsetMapper(self.charset_path, self.max_length)
+
+        # Select the first image from each batch
+        for i in range(x.shape[0]):
+            original_image = x[i]
+            augmented_image1 = x1[i]
+            augmented_image2 = x2[i]
+
+            # Convert torch tensors to numpy arrays for plotting
+            original_image_np = original_image.permute(1, 2, 0).cpu().numpy()
+            augmented_image1_np = augmented_image1.permute(1, 2, 0).cpu().numpy()
+            augmented_image2_np = augmented_image2.permute(1, 2, 0).cpu().numpy()
+
+            # Plotting original image
+            plt.figure(figsize=(12, 4))
+            plt.subplot(1, 3, 1)
+            plt.imshow(original_image_np)
+            plt.title(
+                charset.get_text(torch.argmax(y[i], dim=1)) + " " + str(int(yl[i]))
+            )
+            plt.axis("off")
+
+            # Plotting augmented image 1
+            plt.subplot(1, 3, 2)
+            plt.imshow(augmented_image1_np)
+            plt.title(
+                charset.get_text(torch.argmax(y1[i], dim=1)) + " " + str(int(yl1[i]))
+            )
+            plt.axis("off")
+
+            # Plotting augmented image 2
+            plt.subplot(1, 3, 3)
+            plt.imshow(augmented_image2_np)
+            plt.title(
+                charset.get_text(torch.argmax(y2[i], dim=1)) + " " + str(int(yl2[i]))
+            )
+            plt.axis("off")
+            plt.tight_layout()
+            plt.show()
 
     def _process_gt_labels(self, gt_labels, gt_lengths, permuted_indices, left):
         new_gt_labels = gt_labels.clone()
@@ -530,5 +575,18 @@ class ConAugPretransform(Callback):
 
         last_target[0] = [gt_labels, gt_labels_one, gt_labels_two]
         last_target[1] = [gt_lengths, gt_lengths_one, gt_lengths_two]
+
+        if self.test_conaug:
+            self._visualize_augmented_batch(
+                images,
+                augmented_batch_one,
+                augmented_batch_two,
+                gt_labels,
+                gt_labels_one,
+                gt_labels_two,
+                gt_lengths,
+                gt_lengths_one,
+                gt_lengths_two,
+            )
 
         return {"last_input": last_input, "last_target": last_target}

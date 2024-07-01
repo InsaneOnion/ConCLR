@@ -196,6 +196,8 @@ def _get_learner(config, data, model, local_rank=None):
                     ConAugPretransform,
                     aug_type=config.dataset_conaug_type,
                     max_length=config.dataset_max_length,
+                    test_conaug=config.dataset_test_conaug,
+                    charset_path=config.dataset_charset_path,
                 )
             ]
     else:
