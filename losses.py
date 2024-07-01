@@ -158,25 +158,26 @@ class ContrastiveLoss(nn.Module):
         logits = torch.cat((logits1, logits2), dim=1)
         labels = torch.cat((labels1, labels2), dim=1)
 
-        b, max_length = labels.shape
+        _, max_length = labels.shape
+        s = torch.div(
+            logits @ logits.transpose(2, 1), self.temprature
+        )  # calculate similarity
         am = (
             ~torch.eye(max_length, dtype=torch.bool)
             .unsqueeze(0)
-            .expand(b, -1, -1)
+            .expand(*s.shape)
             .cuda()
         )  # no self mask, set self false
         pm = (
-            labels[:, :, None] != labels[:, None, :]
+            labels[:, :, None]
+            != labels[:, None, :]  # expand label and compare it with its transpose
         ) & am  # positive mask, set positive false
 
         p_num = pm.sum(dim=1).unsqueeze(2)  # count pos num of each m
         npos = (
-            am & p_num.expand(b, max_length, max_length).bool()
+            am & p_num.expand(*s.shape).bool()
         )  # no positive label mask, set no pos false
 
-        s = torch.div(
-            logits @ logits.transpose(2, 1), self.temprature
-        )  # calculate similarity
         s = torch.masked_fill(s, ~npos, 0)  # mask no pos
         s = torch.exp(s - s.max(dim=2, keepdim=True)[0])  # prevent overflow
 
