@@ -167,27 +167,30 @@ class ContrastiveLoss(nn.Module):
             .unsqueeze(0)
             .expand(*s.shape)
             .cuda()
-        )  # no self mask, set self false
+        )  # negative mask(include pm)
         pm = (
             labels[:, :, None]
-            != labels[:, None, :]  # expand label and compare it with its transpose
-        ) & am  # positive mask, set positive false
+            == labels[:, None, :]  # expand label and compare it with its transpose
+        ) & am  # positive mask
 
-        p_num = pm.sum(dim=1).unsqueeze(2)  # count pos num of each m
-        npos = (
-            am & p_num.expand(*s.shape).bool()
-        )  # no positive label mask, set no pos false
+        p_num = torch.where(
+            labels.unsqueeze(2) != 0, pm.sum(dim=1).unsqueeze(2), 0
+        )  # count pos num of each m
+        tm = p_num.expand(*s.shape).bool()  # terminator
 
-        s = torch.masked_fill(s, ~npos, 0)  # mask no pos
-        s = torch.exp(s - s.max(dim=2, keepdim=True)[0])  # prevent overflow
+        s = torch.masked_fill(s, ~tm, 0)  # mask no pos
 
         p = torch.masked_fill(s, ~pm, 0)
         a = torch.masked_fill(s, ~am, 0)
-        a = torch.masked_fill(a, ~npos, 0).sum(dim=2)
-        a = torch.where(a != 0, torch.log(a), 0)
+        em = torch.all(a == 0, dim=2)  # deal with terminator
+        a = torch.logsumexp(a, dim=2)
+        a = torch.masked_fill(a, em, 0)
 
         smx = torch.where(p != 0, p - a.unsqueeze(2), 0)
-        l_pair = torch.sum(-torch.sum(smx, dim=2) / p_num.squeeze(), dim=1)
+        dv = torch.where(
+            p_num.bool().squeeze(), -torch.sum(smx, dim=2) / p_num.squeeze(), 0
+        )
+        l_pair = torch.sum(dv, dim=1)
         loss = torch.mean(l_pair, dim=0)
 
         if record and loss_name is not None:
