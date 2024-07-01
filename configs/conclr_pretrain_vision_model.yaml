@@ -30,6 +30,7 @@ dataset:
   multiscales: False
   num_workers: 20
   conaug_type: "RandCat"
+  test_conaug: True
 
 training:
   epochs: 4
