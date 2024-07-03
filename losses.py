@@ -182,14 +182,12 @@ class ContrastiveLoss(nn.Module):
 
         p = torch.masked_fill(s, ~pm, 0)
         a = torch.masked_fill(s, ~am, 0)
-        em = torch.all(a == 0, dim=2)  # deal with terminator
+        em = p_num.bool().squeeze()  # deal with terminator
         a = torch.logsumexp(a, dim=2)
-        a = torch.masked_fill(a, em, 0)
+        a = torch.masked_fill(a, ~em, 0)
 
         smx = torch.where(p != 0, p - a.unsqueeze(2), 0)
-        dv = torch.where(
-            p_num.bool().squeeze(), -torch.sum(smx, dim=2) / p_num.squeeze(), 0
-        )
+        dv = torch.where(em, -torch.sum(smx, dim=2) / p_num.squeeze(), 0)
         l_pair = torch.sum(dv, dim=1)
         loss = torch.mean(l_pair, dim=0)
 
