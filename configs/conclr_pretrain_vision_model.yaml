@@ -8,29 +8,20 @@ global:
  
 dataset:
   train: {
-    roots: [
-            # 'data/training/MJ/MJ_train/', 
-            # 'data/training/MJ/MJ_test/', 
-            # 'data/training/MJ/MJ_valid/', 
-            'data/training/ST'],
+    roots: ['data/training/ST'],
     batch_size: 384
   }
   test: {
-    roots: [
-             'data/evaluation/IIIT5k_3000',
-            # 'data/evaluation/SVT', 
-            # 'data/evaluation/SVTP',
+    roots: ['data/evaluation/IIIT5k_3000',
              'data/evaluation/IC13_857',
-            # 'data/evaluation/IC15_1811',
-             'data/evaluation/CUTE80'
-            ],
+             'data/evaluation/CUTE80'],
     batch_size: 384
   }
   data_aug: True
   multiscales: False
   num_workers: 20
   conaug_type: "RandCat"
-  test_conaug: True
+  test_conaug: False
 
 training:
   epochs: 4
@@ -57,8 +48,6 @@ optimizer:
 
 model:
   name: 'modules.model_conclr_vision.ConCLR_Vision'
-  # checkpoint: '/ABINet/workdir/conclr-pretrain-vision-model/conclr-pretrain-vision-model_0_12000.pth'
-  # checkpoint: "/home/onion/conclr/workdir/conclr-pretrain-vision-model/conclr-pretrain-vision-model_0_7000.pth"
   checkpoint: ~
   vision: {
     loss_weight: [1.0, 0.5, 0.5],
@@ -66,4 +55,4 @@ model:
     backbone: 'transformer',
     backbone_ln: 3,
   }
-  embedding_channels: 512
+  embedding_channels: 128

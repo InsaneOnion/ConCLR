@@ -186,8 +186,16 @@ class ContrastiveLoss(nn.Module):
         a = torch.logsumexp(a, dim=2)
         a = torch.masked_fill(a, ~em, 0)
 
-        smx = torch.where(p != 0, p - a.unsqueeze(2), 0)
-        dv = torch.where(em, -torch.sum(smx, dim=2) / p_num.squeeze(), 0)
+        smx = torch.where(
+            p != 0,
+            p - a.unsqueeze(2),
+            torch.tensor(0.0, dtype=torch.float32, device="cuda"),
+        )
+        dv = torch.where(
+            em,
+            -torch.sum(smx, dim=2) / p_num.squeeze(),
+            torch.tensor(0.0, dtype=torch.float32, device="cuda"),
+        )
         l_pair = torch.sum(dv, dim=1)
         loss = torch.mean(l_pair, dim=0)
 
