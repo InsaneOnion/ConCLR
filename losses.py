@@ -154,13 +154,13 @@ class ContrastiveLoss(nn.Module):
         super().__init__()
         self.temprature = temprature
 
-    def _clr_loss(self, logits1, logits2, labels1, labels2, loss_name, record=True):
-        logits = torch.cat((logits1, logits2), dim=1)
+    def _clr_loss(self, features1, features2, labels1, labels2, loss_name, record=True):
+        features = torch.cat((features1, features2), dim=1)
         labels = torch.cat((labels1, labels2), dim=1)
 
         _, max_length = labels.shape
         s = torch.div(
-            logits @ logits.transpose(2, 1), self.temprature
+            features @ features.transpose(2, 1), self.temprature
         )  # calculate similarity
         am = (
             ~torch.eye(max_length, dtype=torch.bool)
@@ -173,18 +173,12 @@ class ContrastiveLoss(nn.Module):
             == labels[:, None, :]  # expand label and compare it with its transpose
         ) & am  # positive mask
 
-        p_num = torch.where(
-            labels.unsqueeze(2) != 0, pm.sum(dim=1).unsqueeze(2), 0
-        )  # count pos num of each m
-        tm = p_num.expand(*s.shape).bool()  # terminator
-
-        s = torch.masked_fill(s, ~tm, 0)  # mask no pos
+        p_num = pm.sum(dim=1).unsqueeze(2)  # count pos num of each m
 
         p = torch.masked_fill(s, ~pm, 0)
         a = torch.masked_fill(s, ~am, 0)
-        em = p_num.bool().squeeze()  # deal with terminator
+        em = p_num.bool().squeeze()  # deal with no positive
         a = torch.logsumexp(a, dim=2)
-        a = torch.masked_fill(a, ~em, 0)
 
         smx = torch.where(
             p != 0,
