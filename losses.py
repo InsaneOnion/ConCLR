@@ -1,3 +1,4 @@
+from pdb import main
 from fastai.vision import *
 
 from modules.model import Model
@@ -154,6 +155,47 @@ class ContrastiveLoss(nn.Module):
         super().__init__()
         self.temprature = temprature
 
+    def _clr_nomatrify(self, embed1, embed2, labels1, labels2, loss_name, record=True):
+        embed = torch.cat((embed1, embed2), dim=1)
+        labels = torch.cat((labels1, labels2), dim=1)
+        loss = torch.tensor(0.0, device="cuda")
+        for embed_t, labels_t in zip(embed, labels):
+            # embed_t: (catlength, embed_dim)
+            # labels_t: (catlength)
+            loss_m = torch.tensor(0.0, device="cuda")
+            for m in range(labels_t.shape[0]):
+                pos_indices = torch.where(
+                    (labels_t == labels_t[m])
+                    & (torch.arange(labels_t.shape[0], device="cuda") != m)
+                )[0]
+                pos_logit = embed_t[pos_indices]
+                if pos_logit.shape[0] == 0:
+                    continue
+                a_m = torch.where(torch.arange(labels_t.shape[0], device="cuda") != m)[
+                    0
+                ]
+                s = (embed_t[m] @ embed_t[a_m].T) / self.temprature
+                s_max = s.max()  # prevent overflow
+                loss_p = torch.tensor(0.0, device="cuda")
+                esum = torch.tensor(0.0, device="cuda")
+                for a in a_m:
+                    esum += torch.exp(
+                        torch.dot(embed_t[m], embed_t[a]) / self.temprature - s_max
+                    )
+
+                for p in pos_indices:
+                    loss_p -= (
+                        torch.dot(embed_t[m], embed_t[p]) / self.temprature - s_max
+                    )
+
+                    loss_p += torch.log(esum)
+                loss_m += loss_p / torch.tensor(pos_logit.size(0), device="cuda")
+            loss += loss_m
+        loss = loss / embed.size(0)
+        if record and loss_name is not None:
+            self.losses[f"{loss_name}_loss"] = loss
+        return loss
+
     def _clr_loss(self, embed1, embed2, labels1, labels2, loss_name, record=True):
         embed = torch.cat((embed1, embed2), dim=1)
         labels = torch.cat((labels1, labels2), dim=1)
@@ -173,9 +215,13 @@ class ContrastiveLoss(nn.Module):
             == labels[:, None, :]  # expand label and compare it with its transpose
         ) & am  # positive mask
 
-        p_num = torch.where(
-            labels.unsqueeze(2) != 0, pm.sum(dim=1).unsqueeze(2), 0
-        )  # count pos num of each m
+        # exclude eos
+        # p_num = torch.where(
+        #     labels.unsqueeze(2) != 0, pm.sum(dim=1).unsqueeze(2), 0
+        # )  # count pos num of each m
+
+        # include eos
+        p_num = pm.sum(dim=1).unsqueeze(2)  # count pos num of each m
 
         em = p_num.bool()  # deal with no positive
 
@@ -205,7 +251,7 @@ class ContrastiveLoss(nn.Module):
     def forward(self, X, Y, *args):
         self.losses = {}
         features, loss_name = X.get("proj"), X.get("name")
-        return self._clr_loss(
+        loss = self._clr_loss(
             features[0],
             features[1],
             torch.argmax(Y[0], dim=2),
@@ -213,6 +259,7 @@ class ContrastiveLoss(nn.Module):
             loss_name,
             *args,
         )
+        return loss
 
 
 class TotalLosses(nn.Module):
@@ -240,9 +287,47 @@ class TotalLosses(nn.Module):
             clr_loss = self.clr_loss(
                 outputs[1][0], gt_labels[-2:], gt_lengths[-2:], *args
             )
-            print("rec_loss", rec_loss)
-            print("clr_loss", 0.2 * clr_loss)
+            # print("rec_loss", rec_loss)
+            # print("clr_loss", 0.2 * clr_loss)
             return rec_loss + self.alpha * clr_loss
         else:
             rec_loss = self.rec_loss(outputs, gt_labels, gt_lengths, *args)
             return rec_loss
+
+
+if __name__ == "__main__":
+    import time
+
+    num_samples = 384
+    embed_dim = 512
+    max_length = 52
+    embed1 = torch.randn(num_samples, max_length, embed_dim, device="cuda")
+    embed2 = torch.randn(num_samples, max_length, embed_dim, device="cuda")
+    labels1 = torch.randint(0, 10, (num_samples, max_length), device="cuda")
+    labels2 = torch.randint(0, 10, (num_samples, max_length), device="cuda")
+
+    # Initialize the loss functions
+    contrastive_loss = ContrastiveLoss(temprature=2)
+
+    # Test _clr_nomatrify
+    start_time = time.time()
+    loss_nomatrify = contrastive_loss._clr_nomatrify(
+        embed1, embed2, labels1, labels2, "nomatrify", False
+    )
+    end_time = time.time()
+    time_nomatrify = end_time - start_time
+    print(f"_clr_nomatrify Loss: {loss_nomatrify}, Time: {time_nomatrify:.4f} seconds")
+    print(f"deviation: {abs(loss_nomatrify-time_nomatrify)}")
+
+    # Test _clr_loss
+    start_time = time.time()
+    loss_clr = contrastive_loss._clr_loss(
+        embed1, embed2, labels1, labels2, "clr", False
+    )
+    end_time = time.time()
+    time_clr = end_time - start_time
+    print(f"_clr_loss Loss: {loss_clr}, Time: {time_clr:.4f} seconds")
+
+    # _clr_nomatrify Loss: 2982.53466796875, Time: 100.5598 seconds
+    # _clr_loss Loss: 2982.53515625, Time: 0.0468 seconds
+    # deviation: 0.00048828125
