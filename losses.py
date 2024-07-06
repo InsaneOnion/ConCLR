@@ -154,13 +154,13 @@ class ContrastiveLoss(nn.Module):
         super().__init__()
         self.temprature = temprature
 
-    def _clr_loss(self, features1, features2, labels1, labels2, loss_name, record=True):
-        features = torch.cat((features1, features2), dim=1)
+    def _clr_loss(self, embed1, embed2, labels1, labels2, loss_name, record=True):
+        embed = torch.cat((embed1, embed2), dim=1)
         labels = torch.cat((labels1, labels2), dim=1)
 
         _, max_length = labels.shape
         s = torch.div(
-            features @ features.transpose(2, 1), self.temprature
+            embed @ embed.transpose(2, 1), self.temprature
         )  # calculate similarity
         am = (
             ~torch.eye(max_length, dtype=torch.bool)
@@ -173,12 +173,16 @@ class ContrastiveLoss(nn.Module):
             == labels[:, None, :]  # expand label and compare it with its transpose
         ) & am  # positive mask
 
-        p_num = pm.sum(dim=1).unsqueeze(2)  # count pos num of each m
+        p_num = torch.where(
+            labels.unsqueeze(2) != 0, pm.sum(dim=1).unsqueeze(2), 0
+        )  # count pos num of each m
 
+        em = p_num.bool()  # deal with no positive
+
+        s = torch.masked_fill(s, ~em, 0)  # mask no pos
         p = torch.masked_fill(s, ~pm, 0)
-        a = torch.masked_fill(s, ~am, 0)
-        em = p_num.bool().squeeze()  # deal with no positive
-        a = torch.logsumexp(a, dim=2)
+        a = torch.logsumexp(s.masked_fill(~am, 0), dim=2)
+        a = torch.masked_fill(a, ~em.squeeze(), 0)
 
         smx = torch.where(
             p != 0,
@@ -186,7 +190,7 @@ class ContrastiveLoss(nn.Module):
             torch.tensor(0.0, dtype=torch.float32, device="cuda"),
         )
         dv = torch.where(
-            em,
+            em.squeeze(),
             -torch.sum(smx, dim=2) / p_num.squeeze(),
             torch.tensor(0.0, dtype=torch.float32, device="cuda"),
         )
@@ -200,7 +204,7 @@ class ContrastiveLoss(nn.Module):
 
     def forward(self, X, Y, *args):
         self.losses = {}
-        features, loss_name = X[0].get("proj"), X[0].get("name")
+        features, loss_name = X.get("proj"), X.get("name")
         return self._clr_loss(
             features[0],
             features[1],
@@ -233,7 +237,11 @@ class TotalLosses(nn.Module):
     def forward(self, outputs, gt_labels, gt_lengths, *args):
         if isinstance(outputs, (tuple, list)):
             rec_loss = self.rec_loss(outputs[0], gt_labels, gt_lengths, *args)
-            clr_loss = self.clr_loss(outputs[1], gt_labels[-2:], gt_lengths[-2:], *args)
+            clr_loss = self.clr_loss(
+                outputs[1][0], gt_labels[-2:], gt_lengths[-2:], *args
+            )
+            print("rec_loss", rec_loss)
+            print("clr_loss", 0.2 * clr_loss)
             return rec_loss + self.alpha * clr_loss
         else:
             rec_loss = self.rec_loss(outputs, gt_labels, gt_lengths, *args)

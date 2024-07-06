@@ -10,7 +10,7 @@ from transforms import CVColorJitter, CVDeterioration, CVGeometry
 from utils import CharsetMapper, onehot
 
 
-class ImageDataset(Dataset):
+class ImageLMDBDataset(Dataset):
     "`ImageDataset` read data from LMDB database."
 
     def __init__(

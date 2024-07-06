@@ -16,7 +16,7 @@ from callbacks import (
     TopKTextAccuracy,
     ConAugPretransform,
 )
-from dataset import ImageDataset, TextDataset
+from dataset import ImageLMDBDataset, TextDataset
 from losses import MultiLosses, TotalLosses, RecLosses
 from utils import Config, Logger, MyDataParallel, MyConcatDataset
 
@@ -96,8 +96,8 @@ def _get_databaunch(config):
     # An awkward way to reduce loadding data time during test
     if config.global_phase == "test":
         config.dataset_train_roots = config.dataset_test_roots
-    train_ds = _get_dataset(ImageDataset, config.dataset_train_roots, True, config)
-    valid_ds = _get_dataset(ImageDataset, config.dataset_test_roots, False, config)
+    train_ds = _get_dataset(ImageLMDBDataset, config.dataset_train_roots, True, config)
+    valid_ds = _get_dataset(ImageLMDBDataset, config.dataset_test_roots, False, config)
     data = ImageDataBunch.create(
         train_ds=train_ds,
         valid_ds=valid_ds,

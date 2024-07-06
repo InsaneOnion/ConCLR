@@ -61,9 +61,9 @@ class ConCLR_Vision(Model):
 
     def forward(self, images, *args):
         rec_out, clr_out = [[] for _ in range(2)]
-        name = ["vision", "vision_aug1", "vision_aug2"]
 
         if isinstance(images, (tuple, list)):
+            name = ["vision", "vision_aug1", "vision_aug2"]
             for idx, image in enumerate(images):
                 features = self.backbone(image)  # (N, E, H, W)
                 attn_vecs, attn_scores = self.attention(
