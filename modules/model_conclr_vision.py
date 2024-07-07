@@ -22,7 +22,7 @@ class ProjectionHead(nn.Module):
             )
 
     def forward(self, x):
-        embed = F.normalize(self.head(x), dim=1)
+        embed = F.normalize(self.head(x), dim=-1, p=2)
         return embed
 
 
