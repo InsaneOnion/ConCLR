@@ -293,12 +293,8 @@ class ContrastiveLoss(nn.Module):
 #+end_src
 
 To improve parallel computation efficiency, I compute the contrastive loss
-directly across the entire batch. First, I concatenate two embeddings along the
-second dimension to obtain $logits$. Then, by performing logits @ logits^{T} /
-\tau, I matrix-ify the step of computing dot products in the formula. This yields a
-matrix $s$ of shape (batchsize, max_length, max_length), where each element
-s_{ij} represents logits_{i}⋅logits_{j}​. By applying masks and performing a
-logsumexp operation, we obtain an equivalent result to the loss function.
+directly across the entire batch by matriphy operation. By applying masks , we
+obtain an equivalent result to the loss function.
 
 ** Result
 
