@@ -194,7 +194,7 @@ class ProjectionHead(nn.Module):
             )
 
     def forward(self, x):
-        embed = F.normalize(self.head(x), dim=1)
+        embed = F.normalize(self.head(x), dim=-1, p=2)
         return embed
 #+end_src
 
@@ -227,13 +227,13 @@ class ContrastiveLoss(nn.Module):
         super().__init__()
         self.temprature = temprature
 
-    def _clr_loss(self, features1, features2, labels1, labels2, loss_name, record=True):
-        features = torch.cat((features1, features2), dim=1)
+    def _clr_loss(self, embed1, embed2, labels1, labels2, loss_name, record=True):
+        embed = torch.cat((embed1, embed2), dim=1)
         labels = torch.cat((labels1, labels2), dim=1)
 
         _, max_length = labels.shape
         s = torch.div(
-            features @ features.transpose(2, 1), self.temprature
+            embed @ embed.transpose(2, 1), self.temprature
         )  # calculate similarity
         am = (
             ~torch.eye(max_length, dtype=torch.bool)
@@ -246,12 +246,20 @@ class ContrastiveLoss(nn.Module):
             == labels[:, None, :]  # expand label and compare it with its transpose
         ) & am  # positive mask
 
-        p_num = pm.sum(dim=1).unsqueeze(2)  # count pos num of each m
+        # exclude eos
+        p_num = torch.where(
+            labels.unsqueeze(2) != 0, pm.sum(dim=1).unsqueeze(2), 0
+        )  # count pos num of each m
 
+        # include eos
+        # p_num = pm.sum(dim=1).unsqueeze(2)  # count pos num of each m
+
+        em = p_num.bool()  # deal with no positive
+
+        s = torch.masked_fill(s, ~em, 0)  # mask no pos
         p = torch.masked_fill(s, ~pm, 0)
-        a = torch.masked_fill(s, ~am, 0)
-        em = p_num.bool().squeeze()  # deal with no positive
-        a = torch.logsumexp(a, dim=2)
+        a = torch.logsumexp(s.masked_fill(~am, 0), dim=2)
+        a = torch.masked_fill(a, ~em.squeeze(), 0)
 
         smx = torch.where(
             p != 0,
@@ -259,7 +267,7 @@ class ContrastiveLoss(nn.Module):
             torch.tensor(0.0, dtype=torch.float32, device="cuda"),
         )
         dv = torch.where(
-            em,
+            em.squeeze(),
             -torch.sum(smx, dim=2) / p_num.squeeze(),
             torch.tensor(0.0, dtype=torch.float32, device="cuda"),
         )
