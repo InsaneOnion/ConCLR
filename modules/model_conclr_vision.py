@@ -64,28 +64,69 @@ class ConCLR_Vision(Model):
 
         if isinstance(images, (tuple, list)):
             name = ["vision", "vision_aug1", "vision_aug2"]
-            for idx, image in enumerate(images):
-                features = self.backbone(image)  # (N, E, H, W)
-                attn_vecs, attn_scores = self.attention(
-                    features
-                )  # (N, T, E), (N, T, H, W)
-                logits = self.cls(attn_vecs)  # (N, T, C)
-                pt_lengths = self._get_length(logits)
 
+            # concat on the batch dimension 2760
+            inputs = torch.cat(images, dim=0)
+
+            feats = self.backbone(inputs)  # (N_total, E, H, W)
+            attn_vecs, attn_scores = self.attention(
+                feats
+            )  # (N_total, T, E), (N_total, T, H, W)
+            logits = self.cls(attn_vecs)  # (N_total, T, C)
+            pt_lengths = self._get_length(logits)
+
+            ori_attn_vecs, aug1_attn_vecs, aug2_attn_vecs = torch.chunk(
+                attn_vecs, 3, dim=0
+            )
+            ori_logits, aug1_logits, aug2_logits = torch.chunk(logits, 3, dim=0)
+            ori_pt_lengths, aug1_pt_lengths, aug2_pt_lengths = torch.chunk(
+                pt_lengths, 3, dim=0
+            )
+
+            for idx, (feat, logit, pt_length) in enumerate(
+                zip(
+                    [ori_attn_vecs, aug1_attn_vecs, aug2_attn_vecs],
+                    [ori_logits, aug1_logits, aug2_logits],
+                    [ori_pt_lengths, aug1_pt_lengths, aug2_pt_lengths],
+                )
+            ):
                 rec_out.append(
                     {
-                        "feature": attn_vecs,
-                        "logits": logits,
-                        "pt_lengths": pt_lengths,
-                        "attn_scores": attn_scores,
+                        "feature": feat,
+                        "logits": logit,
+                        "pt_lengths": pt_length,
+                        "attn_scores": attn_scores[idx],
                         "loss_weight": self.loss_weight[idx],
                         "name": name[idx],
                     }
                 )
 
-            aligned_feats_one, aligned_feats_two = [
-                ro["feature"] for ro in rec_out[-2:]
-            ]
+            aligned_feats_one = rec_out[-2]["feature"]
+            aligned_feats_two = rec_out[-1]["feature"]
+
+            # use loop 2674 1:55
+            # for idx, image in enumerate(images):
+            #     features = self.backbone(image)  # (N, E, H, W)
+            #     attn_vecs, attn_scores = self.attention(
+            #         features
+            #     )  # (N, T, E), (N, T, H, W)
+            #     logits = self.cls(attn_vecs)  # (N, T, C)
+            #     pt_lengths = self._get_length(logits)
+
+            #     rec_out.append(
+            #         {
+            #             "feature": attn_vecs,
+            #             "logits": logits,
+            #             "pt_lengths": pt_lengths,
+            #             "attn_scores": attn_scores,
+            #             "loss_weight": self.loss_weight[idx],
+            #             "name": name[idx],
+            #         }
+            #     )
+
+            # aligned_feats_one, aligned_feats_two = [
+            #     ro["feature"] for ro in rec_out[-2:]
+            # ]
 
             proj_feats_one = self.projection_head(aligned_feats_one)
             proj_feats_two = self.projection_head(aligned_feats_two)

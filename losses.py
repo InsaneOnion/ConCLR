@@ -213,12 +213,12 @@ class ContrastiveLoss(nn.Module):
         ) & am  # positive mask
 
         # exclude eos
-        # p_num = torch.where(
-        #     labels.unsqueeze(2) != 0, pm.sum(dim=1).unsqueeze(2), 0
-        # )  # count pos num of each m
+        p_num = torch.where(
+            labels.unsqueeze(2) != 0, pm.sum(dim=1).unsqueeze(2), 0
+        )  # count pos num of each m
 
         # include eos
-        p_num = pm.sum(dim=1).unsqueeze(2)  # count pos num of each m
+        # p_num = pm.sum(dim=1).unsqueeze(2)  # count pos num of each m
 
         em = p_num.bool()  # deal with no positive
 
@@ -285,7 +285,7 @@ class TotalLosses(nn.Module):
                 outputs[1][0], gt_labels[-2:], gt_lengths[-2:], *args
             )
             # print("rec_loss", rec_loss)
-            # print("clr_loss", 0.2 * clr_loss)
+            # print("clr_loss", self.alpha * clr_loss)
             return rec_loss + self.alpha * clr_loss
         else:
             rec_loss = self.rec_loss(outputs, gt_labels, gt_lengths, *args)
