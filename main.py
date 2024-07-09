@@ -1,7 +1,7 @@
-import argparse
-import logging
 import os
 import random
+import logging
+import argparse
 
 import torch
 from fastai.callbacks.general_sched import GeneralScheduler, TrainingPhase
@@ -17,8 +17,14 @@ from callbacks import (
     ConAugPretransform,
 )
 from dataset import ImageLMDBDataset, TextDataset
-from losses import MultiLosses, TotalLosses, RecLosses
-from utils import Config, Logger, MyDataParallel, MyConcatDataset
+from losses import MultiLosses, TotalLosses
+from utils import (
+    Config,
+    Logger,
+    MyDataParallel,
+    MyConcatDataset,
+    ConAugPretransformCollate,
+)
 
 
 def _set_random_seed(seed):
@@ -105,6 +111,11 @@ def _get_databaunch(config):
         val_bs=config.dataset_test_batch_size,
         num_workers=config.dataset_num_workers,
         pin_memory=config.dataset_pin_memory,
+        # collate_fn=ConAugPretransformCollate(
+        #     config.dataset_max_length,
+        #     config.dataset_test_conaug,
+        #     config.dataset_charset_path,
+        # ),
     ).normalize(imagenet_stats)
     ar_tfm = lambda x: ((x[0], x[1]), x[1])  # auto-regression only for dtd
     data.add_tfm(ar_tfm)
