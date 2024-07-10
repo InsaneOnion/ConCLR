@@ -1,0 +1,1930 @@
+ModelConfig(
+	(0): dataset_case_sensitive = False
+	(1): dataset_charset_path = data/charset_36.txt
+	(2): dataset_conaug_type = RandCat
+	(3): dataset_data_aug = True
+	(4): dataset_eval_case_sensitive = False
+	(5): dataset_image_height = 32
+	(6): dataset_image_width = 128
+	(7): dataset_max_length = 25
+	(8): dataset_multiscales = False
+	(9): dataset_num_workers = 128
+	(10): dataset_one_hot_y = True
+	(11): dataset_pin_memory = True
+	(12): dataset_smooth_factor = 0.1
+	(13): dataset_smooth_label = False
+	(14): dataset_test_batch_size = 384
+	(15): dataset_test_conaug = False
+	(16): dataset_test_roots = ['data/evaluation/IIIT5k_3000', 'data/evaluation/IC13_857', 'data/evaluation/CUTE80']
+	(17): dataset_train_batch_size = 384
+	(18): dataset_train_roots = ['data/training/ST']
+	(19): dataset_use_sm = False
+	(20): global_conclr = True
+	(21): global_name = conclr-pretrain-vision-model
+	(22): global_phase = train
+	(23): global_seed = None
+	(24): global_stage = conclr-pretrain-vision
+	(25): global_workdir = workdir/conclr-pretrain-vision-model
+	(26): model_checkpoint = None
+	(27): model_embedding_channels = 256
+	(28): model_name = modules.model_conclr_vision.ConCLR_Vision
+	(29): model_strict = True
+	(30): model_vision_attention = position
+	(31): model_vision_backbone = transformer
+	(32): model_vision_backbone_ln = 3
+	(33): model_vision_loss_weight = [1.0, 0.5, 0.5]
+	(34): optimizer_args_betas = (0.9, 0.999)
+	(35): optimizer_bn_wd = False
+	(36): optimizer_clip_grad = 20
+	(37): optimizer_lr = 0.0001
+	(38): optimizer_scheduler_gamma = 0.1
+	(39): optimizer_scheduler_periods = [3, 1]
+	(40): optimizer_true_wd = False
+	(41): optimizer_type = Adam
+	(42): optimizer_wd = 0.0
+	(43): training_alpha = 0.2
+	(44): training_epochs = 4
+	(45): training_eval_iters = 2000
+	(46): training_save_iters = 2000
+	(47): training_show_iters = 50
+	(48): training_start_iters = 0
+	(49): training_stats_iters = 100000
+	(50): training_tau = 2
+)
+Construct dataset.
+6976115 training items found.
+4145 valid items found.
+Construct model.
+ConCLR_Vision(
+  (backbone): ResTranformer(
+    (resnet): ResNet(
+      (conv1): Conv2d(3, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (layer1): Sequential(
+        (0): BasicBlock(
+          (conv1): Conv2d(32, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(32, 32, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (downsample): Sequential(
+            (0): Conv2d(32, 32, kernel_size=(1, 1), stride=(2, 2), bias=False)
+            (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+        )
+        (1): BasicBlock(
+          (conv1): Conv2d(32, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (2): BasicBlock(
+          (conv1): Conv2d(32, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+      )
+      (layer2): Sequential(
+        (0): BasicBlock(
+          (conv1): Conv2d(32, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (downsample): Sequential(
+            (0): Conv2d(32, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+        )
+        (1): BasicBlock(
+          (conv1): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (2): BasicBlock(
+          (conv1): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): BasicBlock(
+          (conv1): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+      )
+      (layer3): Sequential(
+        (0): BasicBlock(
+          (conv1): Conv2d(64, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (downsample): Sequential(
+            (0): Conv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False)
+            (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+        )
+        (1): BasicBlock(
+          (conv1): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (2): BasicBlock(
+          (conv1): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): BasicBlock(
+          (conv1): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (4): BasicBlock(
+          (conv1): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (5): BasicBlock(
+          (conv1): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+      )
+      (layer4): Sequential(
+        (0): BasicBlock(
+          (conv1): Conv2d(128, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (downsample): Sequential(
+            (0): Conv2d(128, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+        )
+        (1): BasicBlock(
+          (conv1): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (2): BasicBlock(
+          (conv1): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (3): BasicBlock(
+          (conv1): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (4): BasicBlock(
+          (conv1): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (5): BasicBlock(
+          (conv1): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+      )
+      (layer5): Sequential(
+        (0): BasicBlock(
+          (conv1): Conv2d(256, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (downsample): Sequential(
+            (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+        )
+        (1): BasicBlock(
+          (conv1): Conv2d(512, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        (2): BasicBlock(
+          (conv1): Conv2d(512, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (relu): ReLU(inplace=True)
+          (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+      )
+    )
+    (pos_encoder): PositionalEncoding(
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (transformer): TransformerEncoder(
+      (layers): ModuleList(
+        (0): TransformerEncoderLayer(
+          (self_attn): MultiheadAttention(
+            (out_proj): Linear(in_features=512, out_features=512, bias=True)
+          )
+          (linear1): Linear(in_features=512, out_features=2048, bias=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+          (linear2): Linear(in_features=2048, out_features=512, bias=True)
+          (norm1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+          (norm2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+          (dropout1): Dropout(p=0.1, inplace=False)
+          (dropout2): Dropout(p=0.1, inplace=False)
+        )
+        (1): TransformerEncoderLayer(
+          (self_attn): MultiheadAttention(
+            (out_proj): Linear(in_features=512, out_features=512, bias=True)
+          )
+          (linear1): Linear(in_features=512, out_features=2048, bias=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+          (linear2): Linear(in_features=2048, out_features=512, bias=True)
+          (norm1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+          (norm2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+          (dropout1): Dropout(p=0.1, inplace=False)
+          (dropout2): Dropout(p=0.1, inplace=False)
+        )
+        (2): TransformerEncoderLayer(
+          (self_attn): MultiheadAttention(
+            (out_proj): Linear(in_features=512, out_features=512, bias=True)
+          )
+          (linear1): Linear(in_features=512, out_features=2048, bias=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+          (linear2): Linear(in_features=2048, out_features=512, bias=True)
+          (norm1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+          (norm2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+          (dropout1): Dropout(p=0.1, inplace=False)
+          (dropout2): Dropout(p=0.1, inplace=False)
+        )
+      )
+    )
+  )
+  (attention): PositionAttention(
+    (k_encoder): Sequential(
+      (0): Sequential(
+        (0): Conv2d(512, 64, kernel_size=(3, 3), stride=(1, 2), padding=(1, 1))
+        (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (1): Sequential(
+        (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (2): Sequential(
+        (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (3): Sequential(
+        (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+    )
+    (k_decoder): Sequential(
+      (0): Sequential(
+        (0): Upsample(scale_factor=2.0, mode=nearest)
+        (1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): ReLU(inplace=True)
+      )
+      (1): Sequential(
+        (0): Upsample(scale_factor=2.0, mode=nearest)
+        (1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): ReLU(inplace=True)
+      )
+      (2): Sequential(
+        (0): Upsample(scale_factor=2.0, mode=nearest)
+        (1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): ReLU(inplace=True)
+      )
+      (3): Sequential(
+        (0): Upsample(size=(8, 32), mode=nearest)
+        (1): Conv2d(64, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (3): ReLU(inplace=True)
+      )
+    )
+    (pos_encoder): PositionalEncoding(
+      (dropout): Dropout(p=0, inplace=False)
+    )
+    (project): Linear(in_features=512, out_features=512, bias=True)
+  )
+  (cls): Linear(in_features=512, out_features=37, bias=True)
+  (projection_head): ProjectionHead(
+    (head): Sequential(
+      (0): Linear(in_features=512, out_features=512, bias=True)
+      (1): ReLU(inplace=True)
+      (2): Linear(in_features=512, out_features=256, bias=True)
+    )
+  )
+)
+Construct learner.
+Use 4 GPUs.
+Start training.
+epoch 0 iter 50: loss = 13.0739,  smooth loss = 13.5572
+epoch 0 iter 100: loss = 12.5019,  smooth loss = 12.7669
+epoch 0 iter 150: loss = 12.2083,  smooth loss = 12.3884
+epoch 0 iter 200: loss = 11.8849,  smooth loss = 12.1500
+epoch 0 iter 250: loss = 11.6630,  smooth loss = 12.0041
+epoch 0 iter 300: loss = 11.5587,  smooth loss = 11.8369
+epoch 0 iter 350: loss = 11.4277,  smooth loss = 11.7374
+epoch 0 iter 400: loss = 11.3017,  smooth loss = 11.6288
+epoch 0 iter 450: loss = 10.9710,  smooth loss = 11.3813
+epoch 0 iter 500: loss = 10.7950,  smooth loss = 11.1783
+epoch 0 iter 550: loss = 10.8656,  smooth loss = 10.9980
+epoch 0 iter 600: loss = 10.6680,  smooth loss = 10.7999
+epoch 0 iter 650: loss = 10.5475,  smooth loss = 10.5922
+epoch 0 iter 700: loss = 10.0580,  smooth loss = 10.3515
+epoch 0 iter 750: loss = 10.2066,  smooth loss = 10.1863
+epoch 0 iter 800: loss = 10.3094,  smooth loss = 10.0222
+epoch 0 iter 850: loss = 9.7815,  smooth loss = 9.8838
+epoch 0 iter 900: loss = 9.5041,  smooth loss = 9.7293
+epoch 0 iter 950: loss = 9.6588,  smooth loss = 9.5959
+epoch 0 iter 1000: loss = 9.1982,  smooth loss = 9.4825
+epoch 0 iter 1050: loss = 9.4657,  smooth loss = 9.4029
+epoch 0 iter 1100: loss = 8.3313,  smooth loss = 9.2635
+epoch 0 iter 1150: loss = 8.8693,  smooth loss = 9.2509
+epoch 0 iter 1200: loss = 8.9232,  smooth loss = 9.1136
+epoch 0 iter 1250: loss = 9.1559,  smooth loss = 9.0736
+epoch 0 iter 1300: loss = 9.5152,  smooth loss = 9.0409
+epoch 0 iter 1350: loss = 9.4569,  smooth loss = 9.0051
+epoch 0 iter 1400: loss = 8.8168,  smooth loss = 8.9556
+epoch 0 iter 1450: loss = 8.6561,  smooth loss = 8.8308
+epoch 0 iter 1500: loss = 8.8178,  smooth loss = 8.8007
+epoch 0 iter 1550: loss = 9.0555,  smooth loss = 8.7738
+epoch 0 iter 1600: loss = 8.5506,  smooth loss = 8.7369
+epoch 0 iter 1650: loss = 8.8198,  smooth loss = 8.6794
+epoch 0 iter 1700: loss = 9.1689,  smooth loss = 8.7108
+epoch 0 iter 1750: loss = 8.6215,  smooth loss = 8.6095
+epoch 0 iter 1800: loss = 8.2697,  smooth loss = 8.6087
+epoch 0 iter 1850: loss = 8.2705,  smooth loss = 8.5965
+epoch 0 iter 1900: loss = 8.1345,  smooth loss = 8.5270
+epoch 0 iter 1950: loss = 8.4441,  smooth loss = 8.5311
+epoch 0 iter 2000: loss = 8.5495,  smooth loss = 8.5199
+average data time = 0.0376s, average running time = 0.6739s
+epoch 0 iter 2000: eval loss = 0.9272,  ccr = 0.7181,  cwr = 0.5252,  ted = 4147.0000,  ned = 1237.8096,  ted/w = 1.0005, 
+Better model found at epoch 0, iter 2000 with accuracy value: 0.5252.
+Save model conclr-pretrain-vision-model_0_2000
+epoch 0 iter 2050: loss = 9.0686,  smooth loss = 8.5107
+epoch 0 iter 2100: loss = 8.4202,  smooth loss = 8.4459
+epoch 0 iter 2150: loss = 8.7604,  smooth loss = 8.4218
+epoch 0 iter 2200: loss = 8.1989,  smooth loss = 8.3964
+epoch 0 iter 2250: loss = 8.3819,  smooth loss = 8.3770
+epoch 0 iter 2300: loss = 7.9123,  smooth loss = 8.3494
+epoch 0 iter 2350: loss = 8.4639,  smooth loss = 8.3577
+epoch 0 iter 2400: loss = 8.5024,  smooth loss = 8.3320
+epoch 0 iter 2450: loss = 8.1356,  smooth loss = 8.2976
+epoch 0 iter 2500: loss = 8.6773,  smooth loss = 8.2971
+epoch 0 iter 2550: loss = 8.1209,  smooth loss = 8.3098
+epoch 0 iter 2600: loss = 8.2430,  smooth loss = 8.2890
+epoch 0 iter 2650: loss = 9.0335,  smooth loss = 8.2906
+epoch 0 iter 2700: loss = 8.1222,  smooth loss = 8.2810
+epoch 0 iter 2750: loss = 7.8978,  smooth loss = 8.2863
+epoch 0 iter 2800: loss = 8.1201,  smooth loss = 8.2562
+epoch 0 iter 2850: loss = 8.1129,  smooth loss = 8.2297
+epoch 0 iter 2900: loss = 8.1649,  smooth loss = 8.1914
+epoch 0 iter 2950: loss = 8.1607,  smooth loss = 8.2125
+epoch 0 iter 3000: loss = 8.2756,  smooth loss = 8.1528
+epoch 0 iter 3050: loss = 8.1726,  smooth loss = 8.1830
+epoch 0 iter 3100: loss = 8.2699,  smooth loss = 8.1675
+epoch 0 iter 3150: loss = 8.1290,  smooth loss = 8.0914
+epoch 0 iter 3200: loss = 8.2227,  smooth loss = 8.0810
+epoch 0 iter 3250: loss = 8.4721,  smooth loss = 8.0943
+epoch 0 iter 3300: loss = 8.0100,  smooth loss = 8.1075
+epoch 0 iter 3350: loss = 8.0725,  smooth loss = 8.0988
+epoch 0 iter 3400: loss = 8.0806,  smooth loss = 8.1023
+epoch 0 iter 3450: loss = 8.1406,  smooth loss = 8.0945
+epoch 0 iter 3500: loss = 8.5462,  smooth loss = 8.0889
+epoch 0 iter 3550: loss = 8.4843,  smooth loss = 8.0781
+epoch 0 iter 3600: loss = 8.0477,  smooth loss = 8.0376
+epoch 0 iter 3650: loss = 8.4470,  smooth loss = 8.0418
+epoch 0 iter 3700: loss = 7.9978,  smooth loss = 8.0350
+epoch 0 iter 3750: loss = 7.6019,  smooth loss = 8.0125
+epoch 0 iter 3800: loss = 7.6930,  smooth loss = 8.0194
+epoch 0 iter 3850: loss = 8.0455,  smooth loss = 8.0338
+epoch 0 iter 3900: loss = 8.1590,  smooth loss = 7.9623
+epoch 0 iter 3950: loss = 7.9370,  smooth loss = 7.9944
+epoch 0 iter 4000: loss = 7.5931,  smooth loss = 8.0172
+average data time = 0.0200s, average running time = 0.6583s
+epoch 0 iter 4000: eval loss = 0.6530,  ccr = 0.8210,  cwr = 0.6683,  ted = 2403.0000,  ned = 811.6535,  ted/w = 0.5797, 
+Better model found at epoch 0, iter 4000 with accuracy value: 0.6683.
+Save model conclr-pretrain-vision-model_0_4000
+epoch 0 iter 4050: loss = 7.8299,  smooth loss = 7.9947
+epoch 0 iter 4100: loss = 7.8042,  smooth loss = 7.9890
+epoch 0 iter 4150: loss = 7.5991,  smooth loss = 7.9566
+epoch 0 iter 4200: loss = 7.9652,  smooth loss = 7.9360
+epoch 0 iter 4250: loss = 7.8350,  smooth loss = 7.9769
+epoch 0 iter 4300: loss = 7.7728,  smooth loss = 7.9501
+epoch 0 iter 4350: loss = 7.8959,  smooth loss = 7.9351
+epoch 0 iter 4400: loss = 7.4954,  smooth loss = 7.9081
+epoch 0 iter 4450: loss = 7.5912,  smooth loss = 7.9108
+epoch 0 iter 4500: loss = 8.5488,  smooth loss = 7.9489
+epoch 0 iter 4550: loss = 8.1868,  smooth loss = 7.9296
+epoch 0 iter 4600: loss = 8.1893,  smooth loss = 7.9392
+epoch 0 iter 4650: loss = 7.4770,  smooth loss = 7.9290
+epoch 0 iter 4700: loss = 7.9510,  smooth loss = 7.9492
+epoch 0 iter 4750: loss = 8.1735,  smooth loss = 7.9376
+epoch 0 iter 4800: loss = 7.7941,  smooth loss = 7.9227
+epoch 0 iter 4850: loss = 7.6510,  smooth loss = 7.9045
+epoch 0 iter 4900: loss = 7.8208,  smooth loss = 7.8857
+epoch 0 iter 4950: loss = 8.0211,  smooth loss = 7.8703
+epoch 0 iter 5000: loss = 7.9372,  smooth loss = 7.8348
+epoch 0 iter 5050: loss = 7.6886,  smooth loss = 7.8567
+epoch 0 iter 5100: loss = 7.7726,  smooth loss = 7.8553
+epoch 0 iter 5150: loss = 7.5852,  smooth loss = 7.8839
+epoch 0 iter 5200: loss = 7.3469,  smooth loss = 7.8397
+epoch 0 iter 5250: loss = 7.7327,  smooth loss = 7.8298
+epoch 0 iter 5300: loss = 7.4933,  smooth loss = 7.8311
+epoch 0 iter 5350: loss = 7.9946,  smooth loss = 7.8152
+epoch 0 iter 5400: loss = 7.7210,  smooth loss = 7.8340
+epoch 0 iter 5450: loss = 7.5654,  smooth loss = 7.7799
+epoch 0 iter 5500: loss = 7.9103,  smooth loss = 7.7918
+epoch 0 iter 5550: loss = 7.7527,  smooth loss = 7.8039
+epoch 0 iter 5600: loss = 7.6328,  smooth loss = 7.7971
+epoch 0 iter 5650: loss = 7.7053,  smooth loss = 7.8078
+epoch 0 iter 5700: loss = 7.8468,  smooth loss = 7.8046
+epoch 0 iter 5750: loss = 7.9529,  smooth loss = 7.7888
+epoch 0 iter 5800: loss = 8.2529,  smooth loss = 7.8340
+epoch 0 iter 5850: loss = 7.9563,  smooth loss = 7.8236
+epoch 0 iter 5900: loss = 8.0232,  smooth loss = 7.8455
+epoch 0 iter 5950: loss = 7.4412,  smooth loss = 7.7942
+epoch 0 iter 6000: loss = 7.4136,  smooth loss = 7.7703
+average data time = 0.0141s, average running time = 0.6442s
+epoch 0 iter 6000: eval loss = 0.5636,  ccr = 0.8856,  cwr = 0.7361,  ted = 1773.0000,  ned = 662.6460,  ted/w = 0.4277, 
+Better model found at epoch 0, iter 6000 with accuracy value: 0.7361.
+Save model conclr-pretrain-vision-model_0_6000
+epoch 0 iter 6050: loss = 7.6783,  smooth loss = 7.8060
+epoch 0 iter 6100: loss = 7.6471,  smooth loss = 7.7966
+epoch 0 iter 6150: loss = 8.2001,  smooth loss = 7.8101
+epoch 0 iter 6200: loss = 7.6086,  smooth loss = 7.7649
+epoch 0 iter 6250: loss = 7.7492,  smooth loss = 7.7406
+epoch 0 iter 6300: loss = 7.9481,  smooth loss = 7.8049
+epoch 0 iter 6350: loss = 7.7646,  smooth loss = 7.8006
+epoch 0 iter 6400: loss = 8.0585,  smooth loss = 7.7731
+epoch 0 iter 6450: loss = 7.7902,  smooth loss = 7.7585
+epoch 0 iter 6500: loss = 7.5585,  smooth loss = 7.7717
+epoch 0 iter 6550: loss = 7.4257,  smooth loss = 7.7922
+epoch 0 iter 6600: loss = 7.5637,  smooth loss = 7.7295
+epoch 0 iter 6650: loss = 7.9511,  smooth loss = 7.7267
+epoch 0 iter 6700: loss = 7.9644,  smooth loss = 7.7533
+epoch 0 iter 6750: loss = 7.5688,  smooth loss = 7.7209
+epoch 0 iter 6800: loss = 7.8243,  smooth loss = 7.6885
+epoch 0 iter 6850: loss = 7.7096,  smooth loss = 7.7255
+epoch 0 iter 6900: loss = 7.7812,  smooth loss = 7.6691
+epoch 0 iter 6950: loss = 8.0786,  smooth loss = 7.6994
+epoch 0 iter 7000: loss = 7.9031,  smooth loss = 7.7065
+epoch 0 iter 7050: loss = 7.7447,  smooth loss = 7.7265
+epoch 0 iter 7100: loss = 7.4295,  smooth loss = 7.7085
+epoch 0 iter 7150: loss = 7.7672,  smooth loss = 7.7309
+epoch 0 iter 7200: loss = 7.7258,  smooth loss = 7.7477
+epoch 0 iter 7250: loss = 7.6057,  smooth loss = 7.7243
+epoch 0 iter 7300: loss = 7.4293,  smooth loss = 7.6727
+epoch 0 iter 7350: loss = 7.3109,  smooth loss = 7.6801
+epoch 0 iter 7400: loss = 7.8759,  smooth loss = 7.6633
+epoch 0 iter 7450: loss = 7.8712,  smooth loss = 7.7350
+epoch 0 iter 7500: loss = 7.6575,  smooth loss = 7.7163
+epoch 0 iter 7550: loss = 7.7049,  smooth loss = 7.7336
+epoch 0 iter 7600: loss = 7.8026,  smooth loss = 7.6983
+epoch 0 iter 7650: loss = 7.8501,  smooth loss = 7.7014
+epoch 0 iter 7700: loss = 8.3480,  smooth loss = 7.7008
+epoch 0 iter 7750: loss = 7.5077,  smooth loss = 7.7030
+epoch 0 iter 7800: loss = 7.7170,  smooth loss = 7.6831
+epoch 0 iter 7850: loss = 8.1233,  smooth loss = 7.7148
+epoch 0 iter 7900: loss = 7.6799,  smooth loss = 7.7069
+epoch 0 iter 7950: loss = 7.5176,  smooth loss = 7.6782
+epoch 0 iter 8000: loss = 7.9674,  smooth loss = 7.6834
+average data time = 0.0111s, average running time = 0.6384s
+epoch 0 iter 8000: eval loss = 0.5646,  ccr = 0.8827,  cwr = 0.7469,  ted = 1629.0000,  ned = 595.4028,  ted/w = 0.3930, 
+Better model found at epoch 0, iter 8000 with accuracy value: 0.7469.
+Save model conclr-pretrain-vision-model_0_8000
+epoch 0 iter 8050: loss = 7.6776,  smooth loss = 7.6780
+epoch 0 iter 8100: loss = 7.1487,  smooth loss = 7.7115
+epoch 0 iter 8150: loss = 7.7986,  smooth loss = 7.7109
+epoch 0 iter 8200: loss = 7.7640,  smooth loss = 7.6629
+epoch 0 iter 8250: loss = 7.7813,  smooth loss = 7.6492
+epoch 0 iter 8300: loss = 7.6783,  smooth loss = 7.6336
+epoch 0 iter 8350: loss = 7.6179,  smooth loss = 7.6476
+epoch 0 iter 8400: loss = 7.7659,  smooth loss = 7.6701
+epoch 0 iter 8450: loss = 7.7096,  smooth loss = 7.6963
+epoch 0 iter 8500: loss = 8.2611,  smooth loss = 7.6527
+epoch 0 iter 8550: loss = 7.5229,  smooth loss = 7.6658
+epoch 0 iter 8600: loss = 7.6277,  smooth loss = 7.6543
+epoch 0 iter 8650: loss = 7.5435,  smooth loss = 7.6615
+epoch 0 iter 8700: loss = 7.5635,  smooth loss = 7.6325
+epoch 0 iter 8750: loss = 7.4895,  smooth loss = 7.6714
+epoch 0 iter 8800: loss = 7.6593,  smooth loss = 7.6454
+epoch 0 iter 8850: loss = 7.9584,  smooth loss = 7.6616
+epoch 0 iter 8900: loss = 7.5253,  smooth loss = 7.6529
+epoch 0 iter 8950: loss = 7.9895,  smooth loss = 7.6580
+epoch 0 iter 9000: loss = 7.7789,  smooth loss = 7.6501
+epoch 0 iter 9050: loss = 7.5344,  smooth loss = 7.6011
+epoch 0 iter 9100: loss = 7.4623,  smooth loss = 7.6234
+epoch 0 iter 9150: loss = 7.7162,  smooth loss = 7.6384
+epoch 0 iter 9200: loss = 8.1500,  smooth loss = 7.6703
+epoch 0 iter 9250: loss = 7.5369,  smooth loss = 7.6525
+epoch 0 iter 9300: loss = 8.0035,  smooth loss = 7.6565
+epoch 0 iter 9350: loss = 7.7830,  smooth loss = 7.6779
+epoch 0 iter 9400: loss = 7.5519,  smooth loss = 7.6483
+epoch 0 iter 9450: loss = 7.7396,  smooth loss = 7.5993
+epoch 0 iter 9500: loss = 7.4577,  smooth loss = 7.5826
+epoch 0 iter 9550: loss = 7.6168,  smooth loss = 7.5969
+epoch 0 iter 9600: loss = 7.8632,  smooth loss = 7.6044
+epoch 0 iter 9650: loss = 7.3996,  smooth loss = 7.6191
+epoch 0 iter 9700: loss = 7.3971,  smooth loss = 7.6320
+epoch 0 iter 9750: loss = 7.3189,  smooth loss = 7.6351
+epoch 0 iter 9800: loss = 7.8089,  smooth loss = 7.6339
+epoch 0 iter 9850: loss = 7.3015,  smooth loss = 7.5841
+epoch 0 iter 9900: loss = 8.0370,  smooth loss = 7.5986
+epoch 0 iter 9950: loss = 7.5684,  smooth loss = 7.6274
+epoch 0 iter 10000: loss = 7.7976,  smooth loss = 7.5971
+average data time = 0.0094s, average running time = 0.6352s
+epoch 0 iter 10000: eval loss = 0.5090,  ccr = 0.8929,  cwr = 0.7747,  ted = 1457.0000,  ned = 521.7531,  ted/w = 0.3515, 
+Better model found at epoch 0, iter 10000 with accuracy value: 0.7747.
+Save model conclr-pretrain-vision-model_0_10000
+epoch 0 iter 10050: loss = 7.3056,  smooth loss = 7.5891
+epoch 0 iter 10100: loss = 7.6632,  smooth loss = 7.5832
+epoch 0 iter 10150: loss = 7.9222,  smooth loss = 7.5818
+epoch 0 iter 10200: loss = 7.6956,  smooth loss = 7.6175
+epoch 0 iter 10250: loss = 7.3381,  smooth loss = 7.6357
+epoch 0 iter 10300: loss = 7.5504,  smooth loss = 7.6112
+epoch 0 iter 10350: loss = 7.6243,  smooth loss = 7.5860
+epoch 0 iter 10400: loss = 7.1791,  smooth loss = 7.5932
+epoch 0 iter 10450: loss = 7.7665,  smooth loss = 7.5812
+epoch 0 iter 10500: loss = 7.5075,  smooth loss = 7.5680
+epoch 0 iter 10550: loss = 7.7868,  smooth loss = 7.5886
+epoch 0 iter 10600: loss = 7.3535,  smooth loss = 7.5518
+epoch 0 iter 10650: loss = 7.0823,  smooth loss = 7.5473
+epoch 0 iter 10700: loss = 7.3395,  smooth loss = 7.5273
+epoch 0 iter 10750: loss = 7.3072,  smooth loss = 7.5879
+epoch 0 iter 10800: loss = 7.9791,  smooth loss = 7.6009
+epoch 0 iter 10850: loss = 7.5150,  smooth loss = 7.5891
+epoch 0 iter 10900: loss = 7.7770,  smooth loss = 7.5984
+epoch 0 iter 10950: loss = 7.5447,  smooth loss = 7.6094
+epoch 0 iter 11000: loss = 7.6464,  smooth loss = 7.5853
+epoch 0 iter 11050: loss = 7.0979,  smooth loss = 7.5613
+epoch 0 iter 11100: loss = 7.5840,  smooth loss = 7.5835
+epoch 0 iter 11150: loss = 7.1684,  smooth loss = 7.5805
+epoch 0 iter 11200: loss = 7.7584,  smooth loss = 7.5700
+epoch 0 iter 11250: loss = 7.6108,  smooth loss = 7.5551
+epoch 0 iter 11300: loss = 7.3095,  smooth loss = 7.5795
+epoch 0 iter 11350: loss = 7.6453,  smooth loss = 7.5998
+epoch 0 iter 11400: loss = 7.7697,  smooth loss = 7.5540
+epoch 0 iter 11450: loss = 7.5007,  smooth loss = 7.5243
+epoch 0 iter 11500: loss = 7.1793,  smooth loss = 7.5548
+epoch 0 iter 11550: loss = 7.5133,  smooth loss = 7.5582
+epoch 0 iter 11600: loss = 7.7125,  smooth loss = 7.5373
+epoch 0 iter 11650: loss = 7.3467,  smooth loss = 7.5305
+epoch 0 iter 11700: loss = 7.4280,  smooth loss = 7.5682
+epoch 0 iter 11750: loss = 7.3703,  smooth loss = 7.5470
+epoch 0 iter 11800: loss = 7.5521,  smooth loss = 7.5707
+epoch 0 iter 11850: loss = 7.4930,  smooth loss = 7.5318
+epoch 0 iter 11900: loss = 7.7585,  smooth loss = 7.5159
+epoch 0 iter 11950: loss = 7.6008,  smooth loss = 7.5409
+epoch 0 iter 12000: loss = 7.5435,  smooth loss = 7.5412
+average data time = 0.0082s, average running time = 0.6331s
+epoch 0 iter 12000: eval loss = 0.5414,  ccr = 0.9076,  cwr = 0.7983,  ted = 1251.0000,  ned = 501.5397,  ted/w = 0.3018, 
+Better model found at epoch 0, iter 12000 with accuracy value: 0.7983.
+Save model conclr-pretrain-vision-model_0_12000
+epoch 0 iter 12050: loss = 8.1032,  smooth loss = 7.5401
+epoch 0 iter 12100: loss = 7.7311,  smooth loss = 7.5973
+epoch 0 iter 12150: loss = 7.4786,  smooth loss = 7.5677
+epoch 0 iter 12200: loss = 7.6098,  smooth loss = 7.5692
+epoch 0 iter 12250: loss = 7.8229,  smooth loss = 7.5915
+epoch 0 iter 12300: loss = 7.4724,  smooth loss = 7.5432
+epoch 0 iter 12350: loss = 7.8820,  smooth loss = 7.5190
+epoch 0 iter 12400: loss = 7.7606,  smooth loss = 7.5438
+epoch 0 iter 12450: loss = 7.3321,  smooth loss = 7.5368
+epoch 0 iter 12500: loss = 7.3511,  smooth loss = 7.5212
+epoch 0 iter 12550: loss = 7.5462,  smooth loss = 7.5663
+epoch 0 iter 12600: loss = 7.4399,  smooth loss = 7.5232
+epoch 0 iter 12650: loss = 7.3993,  smooth loss = 7.5497
+epoch 0 iter 12700: loss = 7.8036,  smooth loss = 7.5662
+epoch 0 iter 12750: loss = 7.9692,  smooth loss = 7.5517
+epoch 0 iter 12800: loss = 7.1550,  smooth loss = 7.5447
+epoch 0 iter 12850: loss = 7.4401,  smooth loss = 7.5101
+epoch 0 iter 12900: loss = 7.5197,  smooth loss = 7.4898
+epoch 0 iter 12950: loss = 7.0647,  smooth loss = 7.5226
+epoch 0 iter 13000: loss = 7.3935,  smooth loss = 7.5085
+epoch 0 iter 13050: loss = 7.8542,  smooth loss = 7.5034
+epoch 0 iter 13100: loss = 7.4414,  smooth loss = 7.5130
+epoch 0 iter 13150: loss = 7.7096,  smooth loss = 7.5131
+epoch 0 iter 13200: loss = 7.7816,  smooth loss = 7.5154
+epoch 0 iter 13250: loss = 7.4795,  smooth loss = 7.5300
+epoch 0 iter 13300: loss = 7.8029,  smooth loss = 7.5899
+epoch 0 iter 13350: loss = 7.6198,  smooth loss = 7.5586
+epoch 0 iter 13400: loss = 7.6483,  smooth loss = 7.5322
+epoch 0 iter 13450: loss = 7.2412,  smooth loss = 7.4820
+epoch 0 iter 13500: loss = 7.3660,  smooth loss = 7.5132
+epoch 0 iter 13550: loss = 7.2931,  smooth loss = 7.4935
+epoch 0 iter 13600: loss = 7.6839,  smooth loss = 7.5080
+epoch 0 iter 13650: loss = 7.6351,  smooth loss = 7.5189
+epoch 0 iter 13700: loss = 7.7157,  smooth loss = 7.5401
+epoch 0 iter 13750: loss = 7.8274,  smooth loss = 7.5123
+epoch 0 iter 13800: loss = 7.5833,  smooth loss = 7.5325
+epoch 0 iter 13850: loss = 7.6271,  smooth loss = 7.5049
+epoch 0 iter 13900: loss = 7.3463,  smooth loss = 7.5196
+epoch 0 iter 13950: loss = 7.4201,  smooth loss = 7.5109
+epoch 0 iter 14000: loss = 7.1408,  smooth loss = 7.4722
+average data time = 0.0074s, average running time = 0.6321s
+epoch 0 iter 14000: eval loss = 0.4590,  ccr = 0.9087,  cwr = 0.8007,  ted = 1258.0000,  ned = 466.7093,  ted/w = 0.3035, 
+Better model found at epoch 0, iter 14000 with accuracy value: 0.8007.
+Save model conclr-pretrain-vision-model_0_14000
+epoch 0 iter 14050: loss = 7.3958,  smooth loss = 7.4828
+epoch 0 iter 14100: loss = 7.7186,  smooth loss = 7.4802
+epoch 0 iter 14150: loss = 7.3512,  smooth loss = 7.4943
+epoch 0 iter 14200: loss = 7.2997,  smooth loss = 7.5094
+epoch 0 iter 14250: loss = 7.6743,  smooth loss = 7.4938
+epoch 0 iter 14300: loss = 7.4634,  smooth loss = 7.5007
+epoch 0 iter 14350: loss = 7.7764,  smooth loss = 7.4754
+epoch 0 iter 14400: loss = 7.6601,  smooth loss = 7.4823
+epoch 0 iter 14450: loss = 7.3671,  smooth loss = 7.4684
+epoch 0 iter 14500: loss = 7.5853,  smooth loss = 7.4808
+epoch 0 iter 14550: loss = 7.7239,  smooth loss = 7.4672
+epoch 0 iter 14600: loss = 6.9452,  smooth loss = 7.4525
+epoch 0 iter 14650: loss = 7.4285,  smooth loss = 7.4896
+epoch 0 iter 14700: loss = 7.6733,  smooth loss = 7.4968
+epoch 0 iter 14750: loss = 7.5019,  smooth loss = 7.4785
+epoch 0 iter 14800: loss = 7.4341,  smooth loss = 7.4914
+epoch 0 iter 14850: loss = 7.4007,  smooth loss = 7.5188
+epoch 0 iter 14900: loss = 7.5159,  smooth loss = 7.5103
+epoch 0 iter 14950: loss = 7.5982,  smooth loss = 7.5237
+epoch 0 iter 15000: loss = 7.4981,  smooth loss = 7.4740
+epoch 0 iter 15050: loss = 7.2161,  smooth loss = 7.4592
+epoch 0 iter 15100: loss = 7.5032,  smooth loss = 7.4996
+epoch 0 iter 15150: loss = 7.4815,  smooth loss = 7.4876
+epoch 0 iter 15200: loss = 7.4856,  smooth loss = 7.5137
+epoch 0 iter 15250: loss = 7.5514,  smooth loss = 7.4928
+epoch 0 iter 15300: loss = 7.6546,  smooth loss = 7.4604
+epoch 0 iter 15350: loss = 7.9461,  smooth loss = 7.4742
+epoch 0 iter 15400: loss = 7.4022,  smooth loss = 7.4949
+epoch 0 iter 15450: loss = 7.0379,  smooth loss = 7.5066
+epoch 0 iter 15500: loss = 7.6850,  smooth loss = 7.5271
+epoch 0 iter 15550: loss = 7.4092,  smooth loss = 7.4965
+epoch 0 iter 15600: loss = 7.7455,  smooth loss = 7.4736
+epoch 0 iter 15650: loss = 7.6183,  smooth loss = 7.5052
+epoch 0 iter 15700: loss = 7.5078,  smooth loss = 7.4528
+epoch 0 iter 15750: loss = 7.8540,  smooth loss = 7.4948
+epoch 0 iter 15800: loss = 7.4235,  smooth loss = 7.5097
+epoch 0 iter 15850: loss = 7.3254,  smooth loss = 7.4749
+epoch 0 iter 15900: loss = 7.3355,  smooth loss = 7.4328
+epoch 0 iter 15950: loss = 7.3069,  smooth loss = 7.4557
+epoch 0 iter 16000: loss = 7.6472,  smooth loss = 7.5073
+average data time = 0.0067s, average running time = 0.6330s
+epoch 0 iter 16000: eval loss = 0.5560,  ccr = 0.9092,  cwr = 0.8094,  ted = 1174.0000,  ned = 453.3456,  ted/w = 0.2832, 
+Better model found at epoch 0, iter 16000 with accuracy value: 0.8094.
+Save model conclr-pretrain-vision-model_0_16000
+epoch 0 iter 16050: loss = 7.5763,  smooth loss = 7.5001
+epoch 0 iter 16100: loss = 8.1184,  smooth loss = 7.5271
+epoch 0 iter 16150: loss = 7.1398,  smooth loss = 7.4661
+epoch 0 iter 16200: loss = 7.3492,  smooth loss = 7.4576
+epoch 0 iter 16250: loss = 7.6261,  smooth loss = 7.4922
+epoch 0 iter 16300: loss = 7.5222,  smooth loss = 7.4584
+epoch 0 iter 16350: loss = 7.7780,  smooth loss = 7.4775
+epoch 0 iter 16400: loss = 7.4409,  smooth loss = 7.4704
+epoch 0 iter 16450: loss = 7.1623,  smooth loss = 7.4553
+epoch 0 iter 16500: loss = 7.6418,  smooth loss = 7.4311
+epoch 0 iter 16550: loss = 7.3060,  smooth loss = 7.4428
+epoch 0 iter 16600: loss = 7.2217,  smooth loss = 7.4511
+epoch 0 iter 16650: loss = 7.3942,  smooth loss = 7.4517
+epoch 0 iter 16700: loss = 7.5325,  smooth loss = 7.4188
+epoch 0 iter 16750: loss = 7.2761,  smooth loss = 7.4527
+epoch 0 iter 16800: loss = 7.3576,  smooth loss = 7.4402
+epoch 0 iter 16850: loss = 7.5309,  smooth loss = 7.4641
+epoch 0 iter 16900: loss = 7.5790,  smooth loss = 7.4406
+epoch 0 iter 16950: loss = 6.8524,  smooth loss = 7.4390
+epoch 0 iter 17000: loss = 7.3812,  smooth loss = 7.4686
+epoch 0 iter 17050: loss = 7.1743,  smooth loss = 7.4822
+epoch 0 iter 17100: loss = 7.3514,  smooth loss = 7.4528
+epoch 0 iter 17150: loss = 7.3479,  smooth loss = 7.4590
+epoch 0 iter 17200: loss = 6.9824,  smooth loss = 7.4472
+epoch 0 iter 17250: loss = 7.2456,  smooth loss = 7.4589
+epoch 0 iter 17300: loss = 7.0696,  smooth loss = 7.4031
+epoch 0 iter 17350: loss = 7.5156,  smooth loss = 7.4341
+epoch 0 iter 17400: loss = 7.3995,  smooth loss = 7.4713
+epoch 0 iter 17450: loss = 7.7260,  smooth loss = 7.4398
+epoch 0 iter 17500: loss = 7.5351,  smooth loss = 7.4438
+epoch 0 iter 17550: loss = 7.5303,  smooth loss = 7.4684
+epoch 0 iter 17600: loss = 7.6007,  smooth loss = 7.4593
+epoch 0 iter 17650: loss = 7.4855,  smooth loss = 7.4468
+epoch 0 iter 17700: loss = 7.3773,  smooth loss = 7.4444
+epoch 0 iter 17750: loss = 7.2137,  smooth loss = 7.3946
+epoch 0 iter 17800: loss = 7.5676,  smooth loss = 7.3968
+epoch 0 iter 17850: loss = 7.7563,  smooth loss = 7.4333
+epoch 0 iter 17900: loss = 7.6090,  smooth loss = 7.4451
+epoch 0 iter 17950: loss = 7.4656,  smooth loss = 7.4386
+epoch 0 iter 18000: loss = 7.5087,  smooth loss = 7.4274
+average data time = 0.0063s, average running time = 0.6307s
+epoch 0 iter 18000: eval loss = 0.5340,  ccr = 0.9109,  cwr = 0.8205,  ted = 1132.0000,  ned = 416.1217,  ted/w = 0.2731, 
+Better model found at epoch 0, iter 18000 with accuracy value: 0.8205.
+Save model conclr-pretrain-vision-model_0_18000
+epoch 0 iter 18050: loss = 7.1492,  smooth loss = 7.4149
+epoch 0 iter 18100: loss = 7.1770,  smooth loss = 7.4352
+epoch 0 iter 18150: loss = 7.7091,  smooth loss = 7.4580
+epoch 1 iter 18200: loss = 7.3390,  smooth loss = 7.4434
+epoch 1 iter 18250: loss = 7.5608,  smooth loss = 7.4543
+epoch 1 iter 18300: loss = 7.6879,  smooth loss = 7.4243
+epoch 1 iter 18350: loss = 7.8203,  smooth loss = 7.4518
+epoch 1 iter 18400: loss = 7.4102,  smooth loss = 7.4410
+epoch 1 iter 18450: loss = 7.1787,  smooth loss = 7.4339
+epoch 1 iter 18500: loss = 7.3573,  smooth loss = 7.4241
+epoch 1 iter 18550: loss = 7.6986,  smooth loss = 7.4420
+epoch 1 iter 18600: loss = 7.0887,  smooth loss = 7.3945
+epoch 1 iter 18650: loss = 7.1253,  smooth loss = 7.4089
+epoch 1 iter 18700: loss = 7.7754,  smooth loss = 7.4476
+epoch 1 iter 18750: loss = 7.5666,  smooth loss = 7.4778
+epoch 1 iter 18800: loss = 7.5240,  smooth loss = 7.4357
+epoch 1 iter 18850: loss = 7.3553,  smooth loss = 7.4603
+epoch 1 iter 18900: loss = 6.9935,  smooth loss = 7.4426
+epoch 1 iter 18950: loss = 6.9063,  smooth loss = 7.4371
+epoch 1 iter 19000: loss = 7.8564,  smooth loss = 7.4165
+epoch 1 iter 19050: loss = 7.3218,  smooth loss = 7.4196
+epoch 1 iter 19100: loss = 7.2911,  smooth loss = 7.4378
+epoch 1 iter 19150: loss = 7.6446,  smooth loss = 7.4213
+epoch 1 iter 19200: loss = 7.5199,  smooth loss = 7.4459
+epoch 1 iter 19250: loss = 7.3029,  smooth loss = 7.4258
+epoch 1 iter 19300: loss = 7.1914,  smooth loss = 7.4367
+epoch 1 iter 19350: loss = 7.4396,  smooth loss = 7.3989
+epoch 1 iter 19400: loss = 7.4279,  smooth loss = 7.3956
+epoch 1 iter 19450: loss = 7.3602,  smooth loss = 7.3598
+epoch 1 iter 19500: loss = 7.3751,  smooth loss = 7.4206
+epoch 1 iter 19550: loss = 7.3464,  smooth loss = 7.3997
+epoch 1 iter 19600: loss = 7.6666,  smooth loss = 7.3754
+epoch 1 iter 19650: loss = 7.0116,  smooth loss = 7.3696
+epoch 1 iter 19700: loss = 7.2729,  smooth loss = 7.4065
+epoch 1 iter 19750: loss = 7.2969,  smooth loss = 7.3964
+epoch 1 iter 19800: loss = 7.7420,  smooth loss = 7.3944
+epoch 1 iter 19850: loss = 7.2984,  smooth loss = 7.4556
+epoch 1 iter 19900: loss = 7.2529,  smooth loss = 7.4168
+epoch 1 iter 19950: loss = 7.4543,  smooth loss = 7.3746
+epoch 1 iter 20000: loss = 7.6450,  smooth loss = 7.4014
+average data time = 0.0086s, average running time = 0.6282s
+epoch 1 iter 20000: eval loss = 0.5048,  ccr = 0.9134,  cwr = 0.8014,  ted = 1232.0000,  ned = 532.6605,  ted/w = 0.2972, 
+Save model conclr-pretrain-vision-model_1_20000
+epoch 1 iter 20050: loss = 7.2255,  smooth loss = 7.4166
+epoch 1 iter 20100: loss = 7.4529,  smooth loss = 7.3969
+epoch 1 iter 20150: loss = 7.3119,  smooth loss = 7.3998
+epoch 1 iter 20200: loss = 7.7431,  smooth loss = 7.4046
+epoch 1 iter 20250: loss = 7.5346,  smooth loss = 7.4161
+epoch 1 iter 20300: loss = 7.5360,  smooth loss = 7.4348
+epoch 1 iter 20350: loss = 7.3864,  smooth loss = 7.4386
+epoch 1 iter 20400: loss = 7.3567,  smooth loss = 7.4279
+epoch 1 iter 20450: loss = 7.3486,  smooth loss = 7.4114
+epoch 1 iter 20500: loss = 7.5859,  smooth loss = 7.3763
+epoch 1 iter 20550: loss = 7.1768,  smooth loss = 7.3913
+epoch 1 iter 20600: loss = 7.5818,  smooth loss = 7.3982
+epoch 1 iter 20650: loss = 7.3077,  smooth loss = 7.3862
+epoch 1 iter 20700: loss = 7.8467,  smooth loss = 7.3801
+epoch 1 iter 20750: loss = 7.0256,  smooth loss = 7.3719
+epoch 1 iter 20800: loss = 7.3237,  smooth loss = 7.3832
+epoch 1 iter 20850: loss = 7.7526,  smooth loss = 7.3851
+epoch 1 iter 20900: loss = 7.4190,  smooth loss = 7.3837
+epoch 1 iter 20950: loss = 7.2079,  smooth loss = 7.4145
+epoch 1 iter 21000: loss = 7.0238,  smooth loss = 7.4048
+epoch 1 iter 21050: loss = 7.3488,  smooth loss = 7.4162
+epoch 1 iter 21100: loss = 7.3647,  smooth loss = 7.4012
+epoch 1 iter 21150: loss = 7.5666,  smooth loss = 7.4061
+epoch 1 iter 21200: loss = 7.5583,  smooth loss = 7.4105
+epoch 1 iter 21250: loss = 7.1294,  smooth loss = 7.3486
+epoch 1 iter 21300: loss = 7.1945,  smooth loss = 7.3548
+epoch 1 iter 21350: loss = 7.4752,  smooth loss = 7.3505
+epoch 1 iter 21400: loss = 7.2395,  smooth loss = 7.3641
+epoch 1 iter 21450: loss = 7.1848,  smooth loss = 7.3786
+epoch 1 iter 21500: loss = 7.5622,  smooth loss = 7.3957
+epoch 1 iter 21550: loss = 7.4138,  smooth loss = 7.4268
+epoch 1 iter 21600: loss = 7.0170,  smooth loss = 7.4113
+epoch 1 iter 21650: loss = 7.6567,  smooth loss = 7.3964
+epoch 1 iter 21700: loss = 7.2056,  smooth loss = 7.3852
+epoch 1 iter 21750: loss = 7.3396,  smooth loss = 7.3738
+epoch 1 iter 21800: loss = 7.3134,  smooth loss = 7.3864
+epoch 1 iter 21850: loss = 7.2645,  smooth loss = 7.3838
+epoch 1 iter 21900: loss = 7.5511,  smooth loss = 7.3886
+epoch 1 iter 21950: loss = 7.4175,  smooth loss = 7.3523
+epoch 1 iter 22000: loss = 7.5013,  smooth loss = 7.3672
+average data time = 0.0080s, average running time = 0.6273s
+epoch 1 iter 22000: eval loss = 0.5491,  ccr = 0.9154,  cwr = 0.8261,  ted = 1122.0000,  ned = 446.4719,  ted/w = 0.2707, 
+Better model found at epoch 1, iter 22000 with accuracy value: 0.8261.
+Save model conclr-pretrain-vision-model_1_22000
+epoch 1 iter 22050: loss = 7.5261,  smooth loss = 7.3928
+epoch 1 iter 22100: loss = 7.4418,  smooth loss = 7.4024
+epoch 1 iter 22150: loss = 7.2375,  smooth loss = 7.3990
+epoch 1 iter 22200: loss = 7.5628,  smooth loss = 7.3814
+epoch 1 iter 22250: loss = 7.6237,  smooth loss = 7.4003
+epoch 1 iter 22300: loss = 7.0365,  smooth loss = 7.3830
+epoch 1 iter 22350: loss = 7.1967,  smooth loss = 7.3684
+epoch 1 iter 22400: loss = 7.8844,  smooth loss = 7.4203
+epoch 1 iter 22450: loss = 7.2427,  smooth loss = 7.4333
+epoch 1 iter 22500: loss = 7.6595,  smooth loss = 7.4413
+epoch 1 iter 22550: loss = 7.5268,  smooth loss = 7.4081
+epoch 1 iter 22600: loss = 7.4875,  smooth loss = 7.3813
+epoch 1 iter 22650: loss = 7.0467,  smooth loss = 7.3555
+epoch 1 iter 22700: loss = 7.3876,  smooth loss = 7.3931
+epoch 1 iter 22750: loss = 7.3762,  smooth loss = 7.4286
+epoch 1 iter 22800: loss = 7.3114,  smooth loss = 7.3905
+epoch 1 iter 22850: loss = 7.4841,  smooth loss = 7.3779
+epoch 1 iter 22900: loss = 7.0774,  smooth loss = 7.3796
+epoch 1 iter 22950: loss = 7.2437,  smooth loss = 7.3926
+epoch 1 iter 23000: loss = 7.6510,  smooth loss = 7.4137
+epoch 1 iter 23050: loss = 7.2511,  smooth loss = 7.3740
+epoch 1 iter 23100: loss = 7.4838,  smooth loss = 7.3906
+epoch 1 iter 23150: loss = 7.4422,  smooth loss = 7.3780
+epoch 1 iter 23200: loss = 7.4797,  smooth loss = 7.3088
+epoch 1 iter 23250: loss = 7.1972,  smooth loss = 7.3311
+epoch 1 iter 23300: loss = 7.1994,  smooth loss = 7.3309
+epoch 1 iter 23350: loss = 7.4478,  smooth loss = 7.3557
+epoch 1 iter 23400: loss = 7.3077,  smooth loss = 7.3795
+epoch 1 iter 23450: loss = 7.5651,  smooth loss = 7.3755
+epoch 1 iter 23500: loss = 7.5260,  smooth loss = 7.3618
+epoch 1 iter 23550: loss = 7.4764,  smooth loss = 7.3845
+epoch 1 iter 23600: loss = 6.9578,  smooth loss = 7.3608
+epoch 1 iter 23650: loss = 7.1879,  smooth loss = 7.3252
+epoch 1 iter 23700: loss = 7.3599,  smooth loss = 7.3456
+epoch 1 iter 23750: loss = 7.3911,  smooth loss = 7.3929
+epoch 1 iter 23800: loss = 7.4885,  smooth loss = 7.3858
+epoch 1 iter 23850: loss = 7.6231,  smooth loss = 7.3745
+epoch 1 iter 23900: loss = 7.3539,  smooth loss = 7.3631
+epoch 1 iter 23950: loss = 7.0636,  smooth loss = 7.3700
+epoch 1 iter 24000: loss = 7.2822,  smooth loss = 7.3548
+average data time = 0.0075s, average running time = 0.6267s
+epoch 1 iter 24000: eval loss = 0.5638,  ccr = 0.9159,  cwr = 0.8258,  ted = 1159.0000,  ned = 495.6181,  ted/w = 0.2796, 
+Save model conclr-pretrain-vision-model_1_24000
+epoch 1 iter 24050: loss = 7.4810,  smooth loss = 7.3271
+epoch 1 iter 24100: loss = 7.3931,  smooth loss = 7.3739
+epoch 1 iter 24150: loss = 7.3007,  smooth loss = 7.4032
+epoch 1 iter 24200: loss = 7.0688,  smooth loss = 7.3678
+epoch 1 iter 24250: loss = 7.0457,  smooth loss = 7.3543
+epoch 1 iter 24300: loss = 7.2591,  smooth loss = 7.3602
+epoch 1 iter 24350: loss = 7.9453,  smooth loss = 7.3505
+epoch 1 iter 24400: loss = 6.8736,  smooth loss = 7.3164
+epoch 1 iter 24450: loss = 7.4727,  smooth loss = 7.3420
+epoch 1 iter 24500: loss = 7.1905,  smooth loss = 7.3518
+epoch 1 iter 24550: loss = 7.3825,  smooth loss = 7.3673
+epoch 1 iter 24600: loss = 7.3426,  smooth loss = 7.3582
+epoch 1 iter 24650: loss = 7.2977,  smooth loss = 7.3495
+epoch 1 iter 24700: loss = 7.4090,  smooth loss = 7.3482
+epoch 1 iter 24750: loss = 7.3293,  smooth loss = 7.3408
+epoch 1 iter 24800: loss = 7.4502,  smooth loss = 7.3627
+epoch 1 iter 24850: loss = 7.1364,  smooth loss = 7.3530
+epoch 1 iter 24900: loss = 7.5714,  smooth loss = 7.3780
+epoch 1 iter 24950: loss = 7.4644,  smooth loss = 7.3623
+epoch 1 iter 25000: loss = 7.4137,  smooth loss = 7.3486
+epoch 1 iter 25050: loss = 7.5671,  smooth loss = 7.3595
+epoch 1 iter 25100: loss = 7.3186,  smooth loss = 7.3547
+epoch 1 iter 25150: loss = 7.2288,  smooth loss = 7.3695
+epoch 1 iter 25200: loss = 7.3787,  smooth loss = 7.3462
+epoch 1 iter 25250: loss = 7.6066,  smooth loss = 7.3637
+epoch 1 iter 25300: loss = 7.5120,  smooth loss = 7.3188
+epoch 1 iter 25350: loss = 7.4451,  smooth loss = 7.3359
+epoch 1 iter 25400: loss = 7.3719,  smooth loss = 7.3672
+epoch 1 iter 25450: loss = 7.3362,  smooth loss = 7.3281
+epoch 1 iter 25500: loss = 7.3796,  smooth loss = 7.3239
+epoch 1 iter 25550: loss = 7.2022,  smooth loss = 7.3768
+epoch 1 iter 25600: loss = 6.8478,  smooth loss = 7.3375
+epoch 1 iter 25650: loss = 7.3009,  smooth loss = 7.3297
+epoch 1 iter 25700: loss = 7.6164,  smooth loss = 7.3092
+epoch 1 iter 25750: loss = 7.1735,  smooth loss = 7.3018
+epoch 1 iter 25800: loss = 7.4703,  smooth loss = 7.3328
+epoch 1 iter 25850: loss = 7.3048,  smooth loss = 7.3330
+epoch 1 iter 25900: loss = 7.4543,  smooth loss = 7.3825
+epoch 1 iter 25950: loss = 7.4725,  smooth loss = 7.3816
+epoch 1 iter 26000: loss = 7.4963,  smooth loss = 7.3513
+average data time = 0.0071s, average running time = 0.6261s
+epoch 1 iter 26000: eval loss = 0.5273,  ccr = 0.9146,  cwr = 0.8323,  ted = 1103.0000,  ned = 405.3557,  ted/w = 0.2661, 
+Better model found at epoch 1, iter 26000 with accuracy value: 0.8323.
+Save model conclr-pretrain-vision-model_1_26000
+epoch 1 iter 26050: loss = 7.3300,  smooth loss = 7.3558
+epoch 1 iter 26100: loss = 7.5985,  smooth loss = 7.3771
+epoch 1 iter 26150: loss = 7.5330,  smooth loss = 7.3516
+epoch 1 iter 26200: loss = 7.6126,  smooth loss = 7.3817
+epoch 1 iter 26250: loss = 7.2411,  smooth loss = 7.3327
+epoch 1 iter 26300: loss = 7.2697,  smooth loss = 7.3466
+epoch 1 iter 26350: loss = 7.6188,  smooth loss = 7.3597
+epoch 1 iter 26400: loss = 7.1830,  smooth loss = 7.3652
+epoch 1 iter 26450: loss = 7.4038,  smooth loss = 7.3360
+epoch 1 iter 26500: loss = 7.3227,  smooth loss = 7.3362
+epoch 1 iter 26550: loss = 7.4984,  smooth loss = 7.3572
+epoch 1 iter 26600: loss = 7.8925,  smooth loss = 7.3480
+epoch 1 iter 26650: loss = 7.2551,  smooth loss = 7.3320
+epoch 1 iter 26700: loss = 7.5746,  smooth loss = 7.3341
+epoch 1 iter 26750: loss = 7.7660,  smooth loss = 7.3318
+epoch 1 iter 26800: loss = 7.4774,  smooth loss = 7.3190
+epoch 1 iter 26850: loss = 7.1587,  smooth loss = 7.3136
+epoch 1 iter 26900: loss = 7.5034,  smooth loss = 7.3464
+epoch 1 iter 26950: loss = 7.3939,  smooth loss = 7.3526
+epoch 1 iter 27000: loss = 7.2170,  smooth loss = 7.3448
+epoch 1 iter 27050: loss = 7.3737,  smooth loss = 7.3587
+epoch 1 iter 27100: loss = 7.4601,  smooth loss = 7.3469
+epoch 1 iter 27150: loss = 7.5331,  smooth loss = 7.3432
+epoch 1 iter 27200: loss = 7.6771,  smooth loss = 7.3840
+epoch 1 iter 27250: loss = 7.3749,  smooth loss = 7.3884
+epoch 1 iter 27300: loss = 7.4546,  smooth loss = 7.3491
+epoch 1 iter 27350: loss = 7.3621,  smooth loss = 7.3147
+epoch 1 iter 27400: loss = 7.2103,  smooth loss = 7.3114
+epoch 1 iter 27450: loss = 7.9039,  smooth loss = 7.3467
+epoch 1 iter 27500: loss = 7.3848,  smooth loss = 7.3260
+epoch 1 iter 27550: loss = 7.2578,  smooth loss = 7.3322
+epoch 1 iter 27600: loss = 7.3137,  smooth loss = 7.3480
+epoch 1 iter 27650: loss = 6.9636,  smooth loss = 7.3500
+epoch 1 iter 27700: loss = 7.2624,  smooth loss = 7.3555
+epoch 1 iter 27750: loss = 7.3114,  smooth loss = 7.3622
+epoch 1 iter 27800: loss = 7.3960,  smooth loss = 7.3504
+epoch 1 iter 27850: loss = 7.3422,  smooth loss = 7.3723
+epoch 1 iter 27900: loss = 7.1076,  smooth loss = 7.3259
+epoch 1 iter 27950: loss = 7.3690,  smooth loss = 7.3231
+epoch 1 iter 28000: loss = 7.2841,  smooth loss = 7.3198
+average data time = 0.0068s, average running time = 0.6256s
+epoch 1 iter 28000: eval loss = 0.5112,  ccr = 0.9238,  cwr = 0.8478,  ted = 1004.0000,  ned = 391.8317,  ted/w = 0.2422, 
+Better model found at epoch 1, iter 28000 with accuracy value: 0.8478.
+Save model conclr-pretrain-vision-model_1_28000
+epoch 1 iter 28050: loss = 7.5371,  smooth loss = 7.3260
+epoch 1 iter 28100: loss = 7.5469,  smooth loss = 7.3129
+epoch 1 iter 28150: loss = 7.4683,  smooth loss = 7.3172
+epoch 1 iter 28200: loss = 7.3290,  smooth loss = 7.3124
+epoch 1 iter 28250: loss = 7.4770,  smooth loss = 7.3005
+epoch 1 iter 28300: loss = 7.4087,  smooth loss = 7.2942
+epoch 1 iter 28350: loss = 7.1290,  smooth loss = 7.3099
+epoch 1 iter 28400: loss = 7.2713,  smooth loss = 7.2935
+epoch 1 iter 28450: loss = 6.8407,  smooth loss = 7.3069
+epoch 1 iter 28500: loss = 7.0523,  smooth loss = 7.3484
+epoch 1 iter 28550: loss = 7.5494,  smooth loss = 7.3584
+epoch 1 iter 28600: loss = 6.9472,  smooth loss = 7.3458
+epoch 1 iter 28650: loss = 7.4841,  smooth loss = 7.3515
+epoch 1 iter 28700: loss = 7.4556,  smooth loss = 7.3658
+epoch 1 iter 28750: loss = 7.5189,  smooth loss = 7.3876
+epoch 1 iter 28800: loss = 7.4239,  smooth loss = 7.3456
+epoch 1 iter 28850: loss = 7.7598,  smooth loss = 7.3729
+epoch 1 iter 28900: loss = 7.6008,  smooth loss = 7.3469
+epoch 1 iter 28950: loss = 7.4288,  smooth loss = 7.3555
+epoch 1 iter 29000: loss = 7.2709,  smooth loss = 7.3842
+epoch 1 iter 29050: loss = 7.8217,  smooth loss = 7.3916
+epoch 1 iter 29100: loss = 7.5076,  smooth loss = 7.3752
+epoch 1 iter 29150: loss = 7.1255,  smooth loss = 7.3435
+epoch 1 iter 29200: loss = 7.3153,  smooth loss = 7.3386
+epoch 1 iter 29250: loss = 7.4547,  smooth loss = 7.3345
+epoch 1 iter 29300: loss = 7.3652,  smooth loss = 7.3347
+epoch 1 iter 29350: loss = 7.3078,  smooth loss = 7.3100
+epoch 1 iter 29400: loss = 7.4804,  smooth loss = 7.3374
+epoch 1 iter 29450: loss = 7.1864,  smooth loss = 7.3140
+epoch 1 iter 29500: loss = 7.4349,  smooth loss = 7.3002
+epoch 1 iter 29550: loss = 7.2907,  smooth loss = 7.3010
+epoch 1 iter 29600: loss = 7.2013,  smooth loss = 7.3225
+epoch 1 iter 29650: loss = 7.4313,  smooth loss = 7.3754
+epoch 1 iter 29700: loss = 7.3499,  smooth loss = 7.3546
+epoch 1 iter 29750: loss = 7.5530,  smooth loss = 7.3361
+epoch 1 iter 29800: loss = 7.3141,  smooth loss = 7.3164
+epoch 1 iter 29850: loss = 7.1112,  smooth loss = 7.3407
+epoch 1 iter 29900: loss = 7.2433,  smooth loss = 7.3273
+epoch 1 iter 29950: loss = 6.7912,  smooth loss = 7.3016
+epoch 1 iter 30000: loss = 7.3010,  smooth loss = 7.3173
+average data time = 0.0065s, average running time = 0.6251s
+epoch 1 iter 30000: eval loss = 0.5021,  ccr = 0.9265,  cwr = 0.8425,  ted = 1010.0000,  ned = 394.1262,  ted/w = 0.2437, 
+Save model conclr-pretrain-vision-model_1_30000
+epoch 1 iter 30050: loss = 7.5159,  smooth loss = 7.3438
+epoch 1 iter 30100: loss = 7.1834,  smooth loss = 7.3367
+epoch 1 iter 30150: loss = 7.5373,  smooth loss = 7.3355
+epoch 1 iter 30200: loss = 6.8694,  smooth loss = 7.3000
+epoch 1 iter 30250: loss = 7.3483,  smooth loss = 7.2483
+epoch 1 iter 30300: loss = 7.5479,  smooth loss = 7.3002
+epoch 1 iter 30350: loss = 6.9056,  smooth loss = 7.2993
+epoch 1 iter 30400: loss = 7.3903,  smooth loss = 7.3202
+epoch 1 iter 30450: loss = 7.4580,  smooth loss = 7.3354
+epoch 1 iter 30500: loss = 7.3349,  smooth loss = 7.3472
+epoch 1 iter 30550: loss = 7.7653,  smooth loss = 7.2941
+epoch 1 iter 30600: loss = 7.3768,  smooth loss = 7.3364
+epoch 1 iter 30650: loss = 7.3916,  smooth loss = 7.3110
+epoch 1 iter 30700: loss = 6.8511,  smooth loss = 7.3048
+epoch 1 iter 30750: loss = 7.2997,  smooth loss = 7.3134
+epoch 1 iter 30800: loss = 7.5509,  smooth loss = 7.3165
+epoch 1 iter 30850: loss = 7.0193,  smooth loss = 7.3064
+epoch 1 iter 30900: loss = 7.3063,  smooth loss = 7.3224
+epoch 1 iter 30950: loss = 7.4106,  smooth loss = 7.3065
+epoch 1 iter 31000: loss = 7.2522,  smooth loss = 7.3058
+epoch 1 iter 31050: loss = 7.5113,  smooth loss = 7.2926
+epoch 1 iter 31100: loss = 7.3660,  smooth loss = 7.3046
+epoch 1 iter 31150: loss = 7.4226,  smooth loss = 7.3222
+epoch 1 iter 31200: loss = 7.1319,  smooth loss = 7.2903
+epoch 1 iter 31250: loss = 7.6457,  smooth loss = 7.3064
+epoch 1 iter 31300: loss = 7.5172,  smooth loss = 7.3333
+epoch 1 iter 31350: loss = 7.4564,  smooth loss = 7.3309
+epoch 1 iter 31400: loss = 6.9939,  smooth loss = 7.3305
+epoch 1 iter 31450: loss = 7.2431,  smooth loss = 7.3210
+epoch 1 iter 31500: loss = 7.3414,  smooth loss = 7.3146
+epoch 1 iter 31550: loss = 7.5477,  smooth loss = 7.3086
+epoch 1 iter 31600: loss = 7.3364,  smooth loss = 7.3411
+epoch 1 iter 31650: loss = 8.0029,  smooth loss = 7.3464
+epoch 1 iter 31700: loss = 7.2858,  smooth loss = 7.3217
+epoch 1 iter 31750: loss = 6.9685,  smooth loss = 7.3300
+epoch 1 iter 31800: loss = 7.3007,  smooth loss = 7.2803
+epoch 1 iter 31850: loss = 7.6265,  smooth loss = 7.3047
+epoch 1 iter 31900: loss = 7.2324,  smooth loss = 7.3368
+epoch 1 iter 31950: loss = 7.2186,  smooth loss = 7.3004
+epoch 1 iter 32000: loss = 7.4192,  smooth loss = 7.3143
+average data time = 0.0062s, average running time = 0.6245s
+epoch 1 iter 32000: eval loss = 0.5341,  ccr = 0.9261,  cwr = 0.8475,  ted = 947.0000,  ned = 369.4170,  ted/w = 0.2285, 
+Save model conclr-pretrain-vision-model_1_32000
+epoch 1 iter 32050: loss = 7.3904,  smooth loss = 7.3054
+epoch 1 iter 32100: loss = 7.2746,  smooth loss = 7.3049
+epoch 1 iter 32150: loss = 6.8278,  smooth loss = 7.3175
+epoch 1 iter 32200: loss = 7.7523,  smooth loss = 7.2746
+epoch 1 iter 32250: loss = 7.6513,  smooth loss = 7.2919
+epoch 1 iter 32300: loss = 7.6293,  smooth loss = 7.2629
+epoch 1 iter 32350: loss = 7.3542,  smooth loss = 7.2898
+epoch 1 iter 32400: loss = 6.9821,  smooth loss = 7.2652
+epoch 1 iter 32450: loss = 7.6823,  smooth loss = 7.2906
+epoch 1 iter 32500: loss = 7.2292,  smooth loss = 7.3229
+epoch 1 iter 32550: loss = 7.0621,  smooth loss = 7.3157
+epoch 1 iter 32600: loss = 7.5613,  smooth loss = 7.3328
+epoch 1 iter 32650: loss = 7.2190,  smooth loss = 7.2983
+epoch 1 iter 32700: loss = 7.4342,  smooth loss = 7.3015
+epoch 1 iter 32750: loss = 7.1190,  smooth loss = 7.3124
+epoch 1 iter 32800: loss = 7.1523,  smooth loss = 7.3111
+epoch 1 iter 32850: loss = 6.8955,  smooth loss = 7.2794
+epoch 1 iter 32900: loss = 6.9529,  smooth loss = 7.2585
+epoch 1 iter 32950: loss = 7.1928,  smooth loss = 7.2770
+epoch 1 iter 33000: loss = 7.4073,  smooth loss = 7.2732
+epoch 1 iter 33050: loss = 7.3750,  smooth loss = 7.2763
+epoch 1 iter 33100: loss = 7.4242,  smooth loss = 7.3011
+epoch 1 iter 33150: loss = 7.3191,  smooth loss = 7.2841
+epoch 1 iter 33200: loss = 7.1202,  smooth loss = 7.2658
+epoch 1 iter 33250: loss = 7.0173,  smooth loss = 7.2874
+epoch 1 iter 33300: loss = 7.2348,  smooth loss = 7.2867
+epoch 1 iter 33350: loss = 7.4229,  smooth loss = 7.3056
+epoch 1 iter 33400: loss = 7.3338,  smooth loss = 7.3000
+epoch 1 iter 33450: loss = 7.5514,  smooth loss = 7.2869
+epoch 1 iter 33500: loss = 7.2507,  smooth loss = 7.2996
+epoch 1 iter 33550: loss = 7.3414,  smooth loss = 7.2973
+epoch 1 iter 33600: loss = 7.5689,  smooth loss = 7.3338
+epoch 1 iter 33650: loss = 7.5078,  smooth loss = 7.3146
+epoch 1 iter 33700: loss = 7.4641,  smooth loss = 7.2934
+epoch 1 iter 33750: loss = 7.3265,  smooth loss = 7.2816
+epoch 1 iter 33800: loss = 7.2213,  smooth loss = 7.2621
+epoch 1 iter 33850: loss = 7.3050,  smooth loss = 7.2861
+epoch 1 iter 33900: loss = 7.2203,  smooth loss = 7.2793
+epoch 1 iter 33950: loss = 7.1739,  smooth loss = 7.3049
+epoch 1 iter 34000: loss = 7.1671,  smooth loss = 7.2980
+average data time = 0.0060s, average running time = 0.6241s
+epoch 1 iter 34000: eval loss = 0.4945,  ccr = 0.9363,  cwr = 0.8663,  ted = 848.0000,  ned = 311.3095,  ted/w = 0.2046, 
+Better model found at epoch 1, iter 34000 with accuracy value: 0.8663.
+Save model conclr-pretrain-vision-model_1_34000
+epoch 1 iter 34050: loss = 7.3354,  smooth loss = 7.3153
+epoch 1 iter 34100: loss = 7.4035,  smooth loss = 7.3297
+epoch 1 iter 34150: loss = 7.9100,  smooth loss = 7.3021
+epoch 1 iter 34200: loss = 7.1907,  smooth loss = 7.2754
+epoch 1 iter 34250: loss = 7.5217,  smooth loss = 7.2928
+epoch 1 iter 34300: loss = 7.0130,  smooth loss = 7.2816
+epoch 1 iter 34350: loss = 6.9380,  smooth loss = 7.2832
+epoch 1 iter 34400: loss = 7.1935,  smooth loss = 7.2896
+epoch 1 iter 34450: loss = 7.0619,  smooth loss = 7.2822
+epoch 1 iter 34500: loss = 7.4807,  smooth loss = 7.2636
+epoch 1 iter 34550: loss = 7.3268,  smooth loss = 7.3055
+epoch 1 iter 34600: loss = 7.4108,  smooth loss = 7.2897
+epoch 1 iter 34650: loss = 7.5134,  smooth loss = 7.2840
+epoch 1 iter 34700: loss = 7.2471,  smooth loss = 7.2942
+epoch 1 iter 34750: loss = 7.2624,  smooth loss = 7.2856
+epoch 1 iter 34800: loss = 7.2000,  smooth loss = 7.2909
+epoch 1 iter 34850: loss = 7.3601,  smooth loss = 7.2937
+epoch 1 iter 34900: loss = 7.5199,  smooth loss = 7.3295
+epoch 1 iter 34950: loss = 7.3589,  smooth loss = 7.2861
+epoch 1 iter 35000: loss = 7.3904,  smooth loss = 7.2424
+epoch 1 iter 35050: loss = 7.3995,  smooth loss = 7.2827
+epoch 1 iter 35100: loss = 7.7312,  smooth loss = 7.3274
+epoch 1 iter 35150: loss = 7.4863,  smooth loss = 7.3406
+epoch 1 iter 35200: loss = 7.0629,  smooth loss = 7.3118
+epoch 1 iter 35250: loss = 7.3572,  smooth loss = 7.2894
+epoch 1 iter 35300: loss = 7.2287,  smooth loss = 7.2984
+epoch 1 iter 35350: loss = 7.2252,  smooth loss = 7.3070
+epoch 1 iter 35400: loss = 7.1562,  smooth loss = 7.2588
+epoch 1 iter 35450: loss = 7.0296,  smooth loss = 7.2914
+epoch 1 iter 35500: loss = 7.7055,  smooth loss = 7.2724
+epoch 1 iter 35550: loss = 7.1383,  smooth loss = 7.2758
+epoch 1 iter 35600: loss = 7.5870,  smooth loss = 7.2623
+epoch 1 iter 35650: loss = 7.0661,  smooth loss = 7.2807
+epoch 1 iter 35700: loss = 7.2932,  smooth loss = 7.2992
+epoch 1 iter 35750: loss = 6.9748,  smooth loss = 7.2560
+epoch 1 iter 35800: loss = 7.5235,  smooth loss = 7.2425
+epoch 1 iter 35850: loss = 7.0052,  smooth loss = 7.2659
+epoch 1 iter 35900: loss = 7.1447,  smooth loss = 7.2979
+epoch 1 iter 35950: loss = 7.5057,  smooth loss = 7.2963
+epoch 1 iter 36000: loss = 6.9887,  smooth loss = 7.2812
+average data time = 0.0058s, average running time = 0.6238s
+epoch 1 iter 36000: eval loss = 0.4978,  ccr = 0.9229,  cwr = 0.8434,  ted = 1062.0000,  ned = 435.5766,  ted/w = 0.2562, 
+Save model conclr-pretrain-vision-model_1_36000
+epoch 1 iter 36050: loss = 7.3015,  smooth loss = 7.3226
+epoch 1 iter 36100: loss = 7.2731,  smooth loss = 7.2884
+epoch 1 iter 36150: loss = 7.1988,  smooth loss = 7.3145
+epoch 1 iter 36200: loss = 7.4000,  smooth loss = 7.3031
+epoch 1 iter 36250: loss = 7.2190,  smooth loss = 7.2900
+epoch 1 iter 36300: loss = 7.1662,  smooth loss = 7.2932
+epoch 2 iter 36350: loss = 7.0846,  smooth loss = 7.2813
+epoch 2 iter 36400: loss = 6.8588,  smooth loss = 7.2577
+epoch 2 iter 36450: loss = 7.1792,  smooth loss = 7.2508
+epoch 2 iter 36500: loss = 7.3060,  smooth loss = 7.2691
+epoch 2 iter 36550: loss = 7.6500,  smooth loss = 7.3129
+epoch 2 iter 36600: loss = 7.1838,  smooth loss = 7.2694
+epoch 2 iter 36650: loss = 7.2581,  smooth loss = 7.2805
+epoch 2 iter 36700: loss = 7.7607,  smooth loss = 7.3043
+epoch 2 iter 36750: loss = 7.3748,  smooth loss = 7.3418
+epoch 2 iter 36800: loss = 7.2109,  smooth loss = 7.2973
+epoch 2 iter 36850: loss = 7.3063,  smooth loss = 7.2497
+epoch 2 iter 36900: loss = 7.3172,  smooth loss = 7.2534
+epoch 2 iter 36950: loss = 6.6960,  smooth loss = 7.2531
+epoch 2 iter 37000: loss = 7.3913,  smooth loss = 7.2482
+epoch 2 iter 37050: loss = 7.2951,  smooth loss = 7.2529
+epoch 2 iter 37100: loss = 7.1603,  smooth loss = 7.2480
+epoch 2 iter 37150: loss = 7.5994,  smooth loss = 7.2782
+epoch 2 iter 37200: loss = 7.5759,  smooth loss = 7.3016
+epoch 2 iter 37250: loss = 7.0588,  smooth loss = 7.2715
+epoch 2 iter 37300: loss = 7.6656,  smooth loss = 7.2658
+epoch 2 iter 37350: loss = 7.5667,  smooth loss = 7.2858
+epoch 2 iter 37400: loss = 7.6416,  smooth loss = 7.2790
+epoch 2 iter 37450: loss = 7.0355,  smooth loss = 7.2848
+epoch 2 iter 37500: loss = 7.5543,  smooth loss = 7.2762
+epoch 2 iter 37550: loss = 7.3182,  smooth loss = 7.2497
+epoch 2 iter 37600: loss = 7.0920,  smooth loss = 7.2569
+epoch 2 iter 37650: loss = 7.8428,  smooth loss = 7.3037
+epoch 2 iter 37700: loss = 7.3402,  smooth loss = 7.2957
+epoch 2 iter 37750: loss = 7.1933,  smooth loss = 7.2607
+epoch 2 iter 37800: loss = 7.2070,  smooth loss = 7.2649
+epoch 2 iter 37850: loss = 7.5180,  smooth loss = 7.2925
+epoch 2 iter 37900: loss = 7.5154,  smooth loss = 7.2592
+epoch 2 iter 37950: loss = 7.1859,  smooth loss = 7.2751
+epoch 2 iter 38000: loss = 7.2974,  smooth loss = 7.2568
+average data time = 0.0068s, average running time = 0.6235s
+epoch 2 iter 38000: eval loss = 0.4835,  ccr = 0.9223,  cwr = 0.8299,  ted = 1089.0000,  ned = 454.7538,  ted/w = 0.2627, 
+Save model conclr-pretrain-vision-model_2_38000
+epoch 2 iter 38050: loss = 7.6446,  smooth loss = 7.2530
+epoch 2 iter 38100: loss = 7.5343,  smooth loss = 7.2957
+epoch 2 iter 38150: loss = 7.5561,  smooth loss = 7.2862
+epoch 2 iter 38200: loss = 7.1520,  smooth loss = 7.2910
+epoch 2 iter 38250: loss = 7.5044,  smooth loss = 7.2455
+epoch 2 iter 38300: loss = 7.2898,  smooth loss = 7.2715
+epoch 2 iter 38350: loss = 7.1943,  smooth loss = 7.2383
+epoch 2 iter 38400: loss = 7.2274,  smooth loss = 7.2336
+epoch 2 iter 38450: loss = 7.2164,  smooth loss = 7.2382
+epoch 2 iter 38500: loss = 7.5993,  smooth loss = 7.2769
+epoch 2 iter 38550: loss = 7.3324,  smooth loss = 7.2488
+epoch 2 iter 38600: loss = 7.0364,  smooth loss = 7.2667
+epoch 2 iter 38650: loss = 7.6678,  smooth loss = 7.2599
+epoch 2 iter 38700: loss = 6.9958,  smooth loss = 7.2470
+epoch 2 iter 38750: loss = 7.7492,  smooth loss = 7.2658
+epoch 2 iter 38800: loss = 7.1932,  smooth loss = 7.2790
+epoch 2 iter 38850: loss = 7.1989,  smooth loss = 7.2398
+epoch 2 iter 38900: loss = 7.1997,  smooth loss = 7.2590
+epoch 2 iter 38950: loss = 6.7352,  smooth loss = 7.2786
+epoch 2 iter 39000: loss = 7.2098,  smooth loss = 7.2677
+epoch 2 iter 39050: loss = 7.2161,  smooth loss = 7.2619
+epoch 2 iter 39100: loss = 7.1387,  smooth loss = 7.2790
+epoch 2 iter 39150: loss = 7.2943,  smooth loss = 7.2656
+epoch 2 iter 39200: loss = 7.0565,  smooth loss = 7.2609
+epoch 2 iter 39250: loss = 7.3560,  smooth loss = 7.2559
+epoch 2 iter 39300: loss = 7.2017,  smooth loss = 7.2667
+epoch 2 iter 39350: loss = 6.8834,  smooth loss = 7.2886
+epoch 2 iter 39400: loss = 7.2143,  smooth loss = 7.3103
+epoch 2 iter 39450: loss = 7.3512,  smooth loss = 7.3025
+epoch 2 iter 39500: loss = 7.0180,  smooth loss = 7.2425
+epoch 2 iter 39550: loss = 7.4922,  smooth loss = 7.2998
+epoch 2 iter 39600: loss = 7.3375,  smooth loss = 7.2732
+epoch 2 iter 39650: loss = 7.3868,  smooth loss = 7.2844
+epoch 2 iter 39700: loss = 7.3800,  smooth loss = 7.2620
+epoch 2 iter 39750: loss = 7.5069,  smooth loss = 7.2915
+epoch 2 iter 39800: loss = 7.0647,  smooth loss = 7.2981
+epoch 2 iter 39850: loss = 7.3604,  smooth loss = 7.2993
+epoch 2 iter 39900: loss = 7.2837,  smooth loss = 7.2711
+epoch 2 iter 39950: loss = 7.0364,  smooth loss = 7.2543
+epoch 2 iter 40000: loss = 7.0238,  smooth loss = 7.2248
+average data time = 0.0066s, average running time = 0.6231s
+epoch 2 iter 40000: eval loss = 0.4688,  ccr = 0.9243,  cwr = 0.8603,  ted = 946.0000,  ned = 353.8512,  ted/w = 0.2282, 
+Save model conclr-pretrain-vision-model_2_40000
+epoch 2 iter 40050: loss = 7.2460,  smooth loss = 7.2301
+epoch 2 iter 40100: loss = 7.0107,  smooth loss = 7.2183
+epoch 2 iter 40150: loss = 7.4699,  smooth loss = 7.2361
+epoch 2 iter 40200: loss = 7.1462,  smooth loss = 7.2351
+epoch 2 iter 40250: loss = 7.0375,  smooth loss = 7.2400
+epoch 2 iter 40300: loss = 7.2660,  smooth loss = 7.2204
+epoch 2 iter 40350: loss = 7.1210,  smooth loss = 7.2566
+epoch 2 iter 40400: loss = 7.1016,  smooth loss = 7.2495
+epoch 2 iter 40450: loss = 7.3384,  smooth loss = 7.2211
+epoch 2 iter 40500: loss = 7.1176,  smooth loss = 7.2499
+epoch 2 iter 40550: loss = 7.1007,  smooth loss = 7.2498
+epoch 2 iter 40600: loss = 7.2143,  smooth loss = 7.2497
+epoch 2 iter 40650: loss = 6.9621,  smooth loss = 7.2425
+epoch 2 iter 40700: loss = 7.6238,  smooth loss = 7.2836
+epoch 2 iter 40750: loss = 6.6403,  smooth loss = 7.2335
+epoch 2 iter 40800: loss = 7.4776,  smooth loss = 7.2762
+epoch 2 iter 40850: loss = 7.2336,  smooth loss = 7.2650
+epoch 2 iter 40900: loss = 7.2682,  smooth loss = 7.2381
+epoch 2 iter 40950: loss = 7.2453,  smooth loss = 7.2524
+epoch 2 iter 41000: loss = 7.3621,  smooth loss = 7.2476
+epoch 2 iter 41050: loss = 7.4977,  smooth loss = 7.2995
+epoch 2 iter 41100: loss = 7.2075,  smooth loss = 7.2950
+epoch 2 iter 41150: loss = 7.1293,  smooth loss = 7.2689
+epoch 2 iter 41200: loss = 7.4380,  smooth loss = 7.2644
+epoch 2 iter 41250: loss = 7.2676,  smooth loss = 7.2631
+epoch 2 iter 41300: loss = 7.3367,  smooth loss = 7.2828
+epoch 2 iter 41350: loss = 7.5170,  smooth loss = 7.2987
+epoch 2 iter 41400: loss = 6.9469,  smooth loss = 7.2870
+epoch 2 iter 41450: loss = 7.0825,  smooth loss = 7.2180
+epoch 2 iter 41500: loss = 7.0090,  smooth loss = 7.2342
+epoch 2 iter 41550: loss = 7.1562,  smooth loss = 7.2456
+epoch 2 iter 41600: loss = 7.2070,  smooth loss = 7.2307
+epoch 2 iter 41650: loss = 7.6280,  smooth loss = 7.2498
+epoch 2 iter 41700: loss = 7.4389,  smooth loss = 7.2296
+epoch 2 iter 41750: loss = 7.3220,  smooth loss = 7.2663
+epoch 2 iter 41800: loss = 7.1904,  smooth loss = 7.2364
+epoch 2 iter 41850: loss = 6.8739,  smooth loss = 7.2539
+epoch 2 iter 41900: loss = 7.1282,  smooth loss = 7.2797
+epoch 2 iter 41950: loss = 7.7609,  smooth loss = 7.2653
+epoch 2 iter 42000: loss = 7.0630,  smooth loss = 7.2345
+average data time = 0.0064s, average running time = 0.6227s
+epoch 2 iter 42000: eval loss = 0.5367,  ccr = 0.9308,  cwr = 0.8538,  ted = 1055.0000,  ned = 453.7107,  ted/w = 0.2545, 
+Save model conclr-pretrain-vision-model_2_42000
+epoch 2 iter 42050: loss = 6.8507,  smooth loss = 7.1917
+epoch 2 iter 42100: loss = 7.1647,  smooth loss = 7.2190
+epoch 2 iter 42150: loss = 7.3304,  smooth loss = 7.2342
+epoch 2 iter 42200: loss = 7.2716,  smooth loss = 7.2137
+epoch 2 iter 42250: loss = 7.2613,  smooth loss = 7.2203
+epoch 2 iter 42300: loss = 7.2303,  smooth loss = 7.2119
+epoch 2 iter 42350: loss = 7.1032,  smooth loss = 7.2387
+epoch 2 iter 42400: loss = 7.4476,  smooth loss = 7.2516
+epoch 2 iter 42450: loss = 7.4812,  smooth loss = 7.2562
+epoch 2 iter 42500: loss = 6.9838,  smooth loss = 7.2186
+epoch 2 iter 42550: loss = 6.9361,  smooth loss = 7.2164
+epoch 2 iter 42600: loss = 7.3681,  smooth loss = 7.2489
+epoch 2 iter 42650: loss = 7.4985,  smooth loss = 7.2580
+epoch 2 iter 42700: loss = 7.2919,  smooth loss = 7.2453
+epoch 2 iter 42750: loss = 6.8557,  smooth loss = 7.2272
+epoch 2 iter 42800: loss = 7.2037,  smooth loss = 7.2892
+epoch 2 iter 42850: loss = 6.8837,  smooth loss = 7.2384
+epoch 2 iter 42900: loss = 7.2786,  smooth loss = 7.2303
+epoch 2 iter 42950: loss = 7.1459,  smooth loss = 7.2340
+epoch 2 iter 43000: loss = 7.4357,  smooth loss = 7.2452
+epoch 2 iter 43050: loss = 7.4712,  smooth loss = 7.2334
+epoch 2 iter 43100: loss = 7.1304,  smooth loss = 7.2540
+epoch 2 iter 43150: loss = 7.3411,  smooth loss = 7.2564
+epoch 2 iter 43200: loss = 7.1418,  smooth loss = 7.2289
+epoch 2 iter 43250: loss = 7.7136,  smooth loss = 7.2588
+epoch 2 iter 43300: loss = 7.5015,  smooth loss = 7.2648
+epoch 2 iter 43350: loss = 7.5096,  smooth loss = 7.2386
+epoch 2 iter 43400: loss = 6.9560,  smooth loss = 7.2469
+epoch 2 iter 43450: loss = 7.5410,  smooth loss = 7.2723
+epoch 2 iter 43500: loss = 7.3583,  smooth loss = 7.2564
+epoch 2 iter 43550: loss = 7.1296,  smooth loss = 7.2609
+epoch 2 iter 43600: loss = 7.2620,  smooth loss = 7.2352
+epoch 2 iter 43650: loss = 7.1299,  smooth loss = 7.2647
+epoch 2 iter 43700: loss = 7.0913,  smooth loss = 7.2780
+epoch 2 iter 43750: loss = 7.4777,  smooth loss = 7.2540
+epoch 2 iter 43800: loss = 7.0997,  smooth loss = 7.2657
+epoch 2 iter 43850: loss = 7.0378,  smooth loss = 7.2448
+epoch 2 iter 43900: loss = 7.0133,  smooth loss = 7.2143
+epoch 2 iter 43950: loss = 7.0647,  smooth loss = 7.2389
+epoch 2 iter 44000: loss = 7.2551,  smooth loss = 7.2476
+average data time = 0.0062s, average running time = 0.6223s
+epoch 2 iter 44000: eval loss = 0.6132,  ccr = 0.9188,  cwr = 0.8388,  ted = 1079.0000,  ned = 445.8667,  ted/w = 0.2603, 
+Save model conclr-pretrain-vision-model_2_44000
+epoch 2 iter 44050: loss = 7.2833,  smooth loss = 7.2214
+epoch 2 iter 44100: loss = 7.1613,  smooth loss = 7.2188
+epoch 2 iter 44150: loss = 7.1793,  smooth loss = 7.2438
+epoch 2 iter 44200: loss = 7.0535,  smooth loss = 7.2297
+epoch 2 iter 44250: loss = 7.0179,  smooth loss = 7.2358
+epoch 2 iter 44300: loss = 7.0992,  smooth loss = 7.2515
+epoch 2 iter 44350: loss = 7.0802,  smooth loss = 7.2609
+epoch 2 iter 44400: loss = 7.4085,  smooth loss = 7.2429
+epoch 2 iter 44450: loss = 7.4833,  smooth loss = 7.2587
+epoch 2 iter 44500: loss = 7.0185,  smooth loss = 7.2172
+epoch 2 iter 44550: loss = 7.2602,  smooth loss = 7.2512
+epoch 2 iter 44600: loss = 7.2460,  smooth loss = 7.2272
+epoch 2 iter 44650: loss = 7.2821,  smooth loss = 7.2425
+epoch 2 iter 44700: loss = 7.1766,  smooth loss = 7.2572
+epoch 2 iter 44750: loss = 7.3225,  smooth loss = 7.2314
+epoch 2 iter 44800: loss = 7.6709,  smooth loss = 7.2250
+epoch 2 iter 44850: loss = 7.5482,  smooth loss = 7.2471
+epoch 2 iter 44900: loss = 7.5681,  smooth loss = 7.2318
+epoch 2 iter 44950: loss = 7.6946,  smooth loss = 7.2400
+epoch 2 iter 45000: loss = 7.1874,  smooth loss = 7.2220
+epoch 2 iter 45050: loss = 6.9725,  smooth loss = 7.2496
+epoch 2 iter 45100: loss = 6.9925,  smooth loss = 7.2728
+epoch 2 iter 45150: loss = 7.1721,  smooth loss = 7.2352
+epoch 2 iter 45200: loss = 7.4162,  smooth loss = 7.2335
+epoch 2 iter 45250: loss = 7.3735,  smooth loss = 7.2239
+epoch 2 iter 45300: loss = 7.0890,  smooth loss = 7.2427
+epoch 2 iter 45350: loss = 7.1086,  smooth loss = 7.2992
+epoch 2 iter 45400: loss = 7.0941,  smooth loss = 7.2513
+epoch 2 iter 45450: loss = 7.4782,  smooth loss = 7.2177
+epoch 2 iter 45500: loss = 7.4392,  smooth loss = 7.2568
+epoch 2 iter 45550: loss = 6.9613,  smooth loss = 7.2418
+epoch 2 iter 45600: loss = 7.1137,  smooth loss = 7.2077
+epoch 2 iter 45650: loss = 7.5764,  smooth loss = 7.2259
+epoch 2 iter 45700: loss = 7.3099,  smooth loss = 7.2533
+epoch 2 iter 45750: loss = 7.0944,  smooth loss = 7.2767
+epoch 2 iter 45800: loss = 7.1027,  smooth loss = 7.2640
+epoch 2 iter 45850: loss = 7.1473,  smooth loss = 7.2971
+epoch 2 iter 45900: loss = 7.5159,  smooth loss = 7.2864
+epoch 2 iter 45950: loss = 7.1725,  smooth loss = 7.2262
+epoch 2 iter 46000: loss = 7.3560,  smooth loss = 7.2440
+average data time = 0.0060s, average running time = 0.6217s
+epoch 2 iter 46000: eval loss = 0.4747,  ccr = 0.9363,  cwr = 0.8767,  ted = 854.0000,  ned = 313.8754,  ted/w = 0.2060, 
+Better model found at epoch 2, iter 46000 with accuracy value: 0.8767.
+Save model conclr-pretrain-vision-model_2_46000
+epoch 2 iter 46050: loss = 7.2812,  smooth loss = 7.2207
+epoch 2 iter 46100: loss = 7.3191,  smooth loss = 7.2396
+epoch 2 iter 46150: loss = 7.2754,  smooth loss = 7.2249
+epoch 2 iter 46200: loss = 7.3309,  smooth loss = 7.2470
+epoch 2 iter 46250: loss = 7.3971,  smooth loss = 7.2136
+epoch 2 iter 46300: loss = 7.1054,  smooth loss = 7.2241
+epoch 2 iter 46350: loss = 7.0038,  smooth loss = 7.2086
+epoch 2 iter 46400: loss = 7.3361,  smooth loss = 7.2441
+epoch 2 iter 46450: loss = 7.2424,  smooth loss = 7.2266
+epoch 2 iter 46500: loss = 6.7230,  smooth loss = 7.2044
+epoch 2 iter 46550: loss = 7.3550,  smooth loss = 7.1972
+epoch 2 iter 46600: loss = 7.2341,  smooth loss = 7.1855
+epoch 2 iter 46650: loss = 7.4766,  smooth loss = 7.1927
+epoch 2 iter 46700: loss = 7.2848,  smooth loss = 7.2210
+epoch 2 iter 46750: loss = 7.0832,  smooth loss = 7.2055
+epoch 2 iter 46800: loss = 7.3726,  smooth loss = 7.2324
+epoch 2 iter 46850: loss = 7.3889,  smooth loss = 7.2418
+epoch 2 iter 46900: loss = 7.0124,  smooth loss = 7.2224
+epoch 2 iter 46950: loss = 6.6129,  smooth loss = 7.2125
+epoch 2 iter 47000: loss = 7.1373,  smooth loss = 7.1970
+epoch 2 iter 47050: loss = 7.3230,  smooth loss = 7.1985
+epoch 2 iter 47100: loss = 6.9910,  smooth loss = 7.2337
+epoch 2 iter 47150: loss = 7.4350,  smooth loss = 7.2394
+epoch 2 iter 47200: loss = 6.9978,  smooth loss = 7.2242
+epoch 2 iter 47250: loss = 6.7925,  smooth loss = 7.2049
+epoch 2 iter 47300: loss = 7.2629,  smooth loss = 7.2160
+epoch 2 iter 47350: loss = 7.5863,  smooth loss = 7.2485
+epoch 2 iter 47400: loss = 7.2382,  smooth loss = 7.2536
+epoch 2 iter 47450: loss = 7.6220,  smooth loss = 7.2640
+epoch 2 iter 47500: loss = 7.5169,  smooth loss = 7.2561
+epoch 2 iter 47550: loss = 7.2236,  smooth loss = 7.2652
+epoch 2 iter 47600: loss = 7.6502,  smooth loss = 7.2684
+epoch 2 iter 47650: loss = 7.5437,  smooth loss = 7.2158
+epoch 2 iter 47700: loss = 7.4066,  smooth loss = 7.2545
+epoch 2 iter 47750: loss = 6.8962,  smooth loss = 7.2237
+epoch 2 iter 47800: loss = 7.1531,  smooth loss = 7.2204
+epoch 2 iter 47850: loss = 7.3204,  smooth loss = 7.2483
+epoch 2 iter 47900: loss = 6.9058,  smooth loss = 7.2005
+epoch 2 iter 47950: loss = 7.5783,  smooth loss = 7.2195
+epoch 2 iter 48000: loss = 6.9904,  smooth loss = 7.1797
+average data time = 0.0059s, average running time = 0.6215s
+epoch 2 iter 48000: eval loss = 0.4894,  ccr = 0.9231,  cwr = 0.8444,  ted = 1034.0000,  ned = 442.1175,  ted/w = 0.2495, 
+Save model conclr-pretrain-vision-model_2_48000
+epoch 2 iter 48050: loss = 6.7681,  smooth loss = 7.2220
+epoch 2 iter 48100: loss = 7.2510,  smooth loss = 7.2121
+epoch 2 iter 48150: loss = 7.3792,  smooth loss = 7.2379
+epoch 2 iter 48200: loss = 7.2219,  smooth loss = 7.2244
+epoch 2 iter 48250: loss = 7.5401,  smooth loss = 7.2472
+epoch 2 iter 48300: loss = 7.2608,  smooth loss = 7.2392
+epoch 2 iter 48350: loss = 7.2813,  smooth loss = 7.1978
+epoch 2 iter 48400: loss = 7.1143,  smooth loss = 7.2067
+epoch 2 iter 48450: loss = 7.4152,  smooth loss = 7.2711
+epoch 2 iter 48500: loss = 7.3153,  smooth loss = 7.2233
+epoch 2 iter 48550: loss = 7.4595,  smooth loss = 7.2178
+epoch 2 iter 48600: loss = 6.7328,  smooth loss = 7.2316
+epoch 2 iter 48650: loss = 7.0430,  smooth loss = 7.2037
+epoch 2 iter 48700: loss = 7.4007,  smooth loss = 7.2005
+epoch 2 iter 48750: loss = 7.0502,  smooth loss = 7.2042
+epoch 2 iter 48800: loss = 7.1197,  smooth loss = 7.2134
+epoch 2 iter 48850: loss = 7.4442,  smooth loss = 7.2162
+epoch 2 iter 48900: loss = 6.9494,  smooth loss = 7.2380
+epoch 2 iter 48950: loss = 7.1015,  smooth loss = 7.1924
+epoch 2 iter 49000: loss = 7.1158,  smooth loss = 7.1762
+epoch 2 iter 49050: loss = 7.2045,  smooth loss = 7.1807
+epoch 2 iter 49100: loss = 7.2364,  smooth loss = 7.2205
+epoch 2 iter 49150: loss = 7.0616,  smooth loss = 7.2570
+epoch 2 iter 49200: loss = 7.3726,  smooth loss = 7.2519
+epoch 2 iter 49250: loss = 6.8952,  smooth loss = 7.2713
+epoch 2 iter 49300: loss = 6.9187,  smooth loss = 7.2535
+epoch 2 iter 49350: loss = 7.4655,  smooth loss = 7.2314
+epoch 2 iter 49400: loss = 7.1332,  smooth loss = 7.2177
+epoch 2 iter 49450: loss = 7.2200,  smooth loss = 7.2256
+epoch 2 iter 49500: loss = 7.3240,  smooth loss = 7.2489
+epoch 2 iter 49550: loss = 6.9456,  smooth loss = 7.2116
+epoch 2 iter 49600: loss = 7.3492,  smooth loss = 7.2365
+epoch 2 iter 49650: loss = 7.4771,  smooth loss = 7.2369
+epoch 2 iter 49700: loss = 7.0463,  smooth loss = 7.1916
+epoch 2 iter 49750: loss = 7.2892,  smooth loss = 7.1852
+epoch 2 iter 49800: loss = 7.0438,  smooth loss = 7.2302
+epoch 2 iter 49850: loss = 7.4944,  smooth loss = 7.2618
+epoch 2 iter 49900: loss = 6.8835,  smooth loss = 7.2003
+epoch 2 iter 49950: loss = 7.0977,  smooth loss = 7.2033
+epoch 2 iter 50000: loss = 6.5851,  smooth loss = 7.2011
+average data time = 0.0057s, average running time = 0.6213s
+epoch 2 iter 50000: eval loss = 0.4644,  ccr = 0.9352,  cwr = 0.8615,  ted = 901.0000,  ned = 375.2019,  ted/w = 0.2174, 
+Save model conclr-pretrain-vision-model_2_50000
+epoch 2 iter 50050: loss = 7.3082,  smooth loss = 7.1840
+epoch 2 iter 50100: loss = 7.2188,  smooth loss = 7.2264
+epoch 2 iter 50150: loss = 6.8516,  smooth loss = 7.1913
+epoch 2 iter 50200: loss = 7.2525,  smooth loss = 7.2140
+epoch 2 iter 50250: loss = 6.9343,  smooth loss = 7.1979
+epoch 2 iter 50300: loss = 7.3959,  smooth loss = 7.2230
+epoch 2 iter 50350: loss = 7.2758,  smooth loss = 7.1663
+epoch 2 iter 50400: loss = 7.3197,  smooth loss = 7.1917
+epoch 2 iter 50450: loss = 7.1261,  smooth loss = 7.2289
+epoch 2 iter 50500: loss = 7.6852,  smooth loss = 7.2146
+epoch 2 iter 50550: loss = 6.8618,  smooth loss = 7.2388
+epoch 2 iter 50600: loss = 7.2196,  smooth loss = 7.2339
+epoch 2 iter 50650: loss = 7.1466,  smooth loss = 7.2221
+epoch 2 iter 50700: loss = 6.8255,  smooth loss = 7.2001
+epoch 2 iter 50750: loss = 6.9193,  smooth loss = 7.2012
+epoch 2 iter 50800: loss = 6.9560,  smooth loss = 7.2024
+epoch 2 iter 50850: loss = 7.1424,  smooth loss = 7.2235
+epoch 2 iter 50900: loss = 6.9517,  smooth loss = 7.1971
+epoch 2 iter 50950: loss = 7.0770,  smooth loss = 7.1897
+epoch 2 iter 51000: loss = 7.7165,  smooth loss = 7.1915
+epoch 2 iter 51050: loss = 7.0086,  smooth loss = 7.1817
+epoch 2 iter 51100: loss = 6.9273,  smooth loss = 7.1760
+epoch 2 iter 51150: loss = 7.3326,  smooth loss = 7.2008
+epoch 2 iter 51200: loss = 7.2926,  smooth loss = 7.2279
+epoch 2 iter 51250: loss = 6.7758,  smooth loss = 7.1918
+epoch 2 iter 51300: loss = 7.2302,  smooth loss = 7.1931
+epoch 2 iter 51350: loss = 7.2156,  smooth loss = 7.2311
+epoch 2 iter 51400: loss = 7.2542,  smooth loss = 7.2174
+epoch 2 iter 51450: loss = 7.0304,  smooth loss = 7.1883
+epoch 2 iter 51500: loss = 7.0227,  smooth loss = 7.2187
+epoch 2 iter 51550: loss = 6.8780,  smooth loss = 7.1814
+epoch 2 iter 51600: loss = 7.1342,  smooth loss = 7.1901
+epoch 2 iter 51650: loss = 7.2539,  smooth loss = 7.1835
+epoch 2 iter 51700: loss = 7.1930,  smooth loss = 7.2392
+epoch 2 iter 51750: loss = 7.0043,  smooth loss = 7.1860
+epoch 2 iter 51800: loss = 7.0682,  smooth loss = 7.1569
+epoch 2 iter 51850: loss = 7.0971,  smooth loss = 7.1454
+epoch 2 iter 51900: loss = 7.2100,  smooth loss = 7.1582
+epoch 2 iter 51950: loss = 6.8208,  smooth loss = 7.1532
+epoch 2 iter 52000: loss = 7.2388,  smooth loss = 7.1681
+average data time = 0.0056s, average running time = 0.6217s
+epoch 2 iter 52000: eval loss = 0.5424,  ccr = 0.9363,  cwr = 0.8743,  ted = 799.0000,  ned = 302.4076,  ted/w = 0.1928, 
+Save model conclr-pretrain-vision-model_2_52000
+epoch 2 iter 52050: loss = 7.1026,  smooth loss = 7.1882
+epoch 2 iter 52100: loss = 7.0930,  smooth loss = 7.2315
+epoch 2 iter 52150: loss = 7.2253,  smooth loss = 7.2210
+epoch 2 iter 52200: loss = 7.4806,  smooth loss = 7.2335
+epoch 2 iter 52250: loss = 7.0613,  smooth loss = 7.2199
+epoch 2 iter 52300: loss = 6.9891,  smooth loss = 7.1878
+epoch 2 iter 52350: loss = 7.0792,  smooth loss = 7.1894
+epoch 2 iter 52400: loss = 7.4242,  smooth loss = 7.2295
+epoch 2 iter 52450: loss = 7.0258,  smooth loss = 7.2000
+epoch 2 iter 52500: loss = 7.4694,  smooth loss = 7.1961
+epoch 2 iter 52550: loss = 7.5926,  smooth loss = 7.2401
+epoch 2 iter 52600: loss = 7.4504,  smooth loss = 7.2270
+epoch 2 iter 52650: loss = 7.2191,  smooth loss = 7.2367
+epoch 2 iter 52700: loss = 7.0327,  smooth loss = 7.2049
+epoch 2 iter 52750: loss = 6.7939,  smooth loss = 7.2121
+epoch 2 iter 52800: loss = 7.4981,  smooth loss = 7.2095
+epoch 2 iter 52850: loss = 6.9707,  smooth loss = 7.2437
+epoch 2 iter 52900: loss = 6.7044,  smooth loss = 7.2469
+epoch 2 iter 52950: loss = 7.6026,  smooth loss = 7.2092
+epoch 2 iter 53000: loss = 7.2721,  smooth loss = 7.1966
+epoch 2 iter 53050: loss = 7.3041,  smooth loss = 7.2424
+epoch 2 iter 53100: loss = 7.2002,  smooth loss = 7.2081
+epoch 2 iter 53150: loss = 7.3649,  smooth loss = 7.2063
+epoch 2 iter 53200: loss = 7.0560,  smooth loss = 7.1753
+epoch 2 iter 53250: loss = 7.1301,  smooth loss = 7.2042
+epoch 2 iter 53300: loss = 7.0715,  smooth loss = 7.2204
+epoch 2 iter 53350: loss = 7.6222,  smooth loss = 7.2315
+epoch 2 iter 53400: loss = 7.0512,  smooth loss = 7.1902
+epoch 2 iter 53450: loss = 7.1421,  smooth loss = 7.1702
+epoch 2 iter 53500: loss = 7.5899,  smooth loss = 7.1590
+epoch 2 iter 53550: loss = 6.7342,  smooth loss = 7.1544
+epoch 2 iter 53600: loss = 7.1198,  smooth loss = 7.1659
+epoch 2 iter 53650: loss = 7.4366,  smooth loss = 7.1752
+epoch 2 iter 53700: loss = 7.4539,  smooth loss = 7.1917
+epoch 2 iter 53750: loss = 7.2432,  smooth loss = 7.2123
+epoch 2 iter 53800: loss = 7.5018,  smooth loss = 7.1868
+epoch 2 iter 53850: loss = 7.1286,  smooth loss = 7.1707
+epoch 2 iter 53900: loss = 7.4067,  smooth loss = 7.1996
+epoch 2 iter 53950: loss = 6.9683,  smooth loss = 7.1796
+epoch 2 iter 54000: loss = 7.2857,  smooth loss = 7.2136
+average data time = 0.0055s, average running time = 0.6222s
+epoch 2 iter 54000: eval loss = 0.4827,  ccr = 0.9421,  cwr = 0.8741,  ted = 734.0000,  ned = 266.5898,  ted/w = 0.1771, 
+Save model conclr-pretrain-vision-model_2_54000
+epoch 2 iter 54050: loss = 7.2150,  smooth loss = 7.2368
+epoch 2 iter 54100: loss = 6.9822,  smooth loss = 7.2137
+epoch 2 iter 54150: loss = 6.9396,  smooth loss = 7.2027
+epoch 2 iter 54200: loss = 6.9660,  smooth loss = 7.2115
+epoch 2 iter 54250: loss = 6.7667,  smooth loss = 7.1609
+epoch 2 iter 54300: loss = 7.2166,  smooth loss = 7.1717
+epoch 2 iter 54350: loss = 7.0623,  smooth loss = 7.1810
+epoch 2 iter 54400: loss = 7.2686,  smooth loss = 7.1939
+epoch 2 iter 54450: loss = 7.3061,  smooth loss = 7.2085
+epoch 3 iter 54500: loss = 7.4812,  smooth loss = 7.2384
+epoch 3 iter 54550: loss = 6.9832,  smooth loss = 7.2044
+epoch 3 iter 54600: loss = 7.2181,  smooth loss = 7.1731
+epoch 3 iter 54650: loss = 6.7609,  smooth loss = 7.1335
+epoch 3 iter 54700: loss = 6.8951,  smooth loss = 7.1783
+epoch 3 iter 54750: loss = 7.6194,  smooth loss = 7.1709
+epoch 3 iter 54800: loss = 7.0741,  smooth loss = 7.1677
+epoch 3 iter 54850: loss = 6.8913,  smooth loss = 7.1369
+epoch 3 iter 54900: loss = 7.3382,  smooth loss = 7.1445
+epoch 3 iter 54950: loss = 6.9446,  smooth loss = 7.1878
+epoch 3 iter 55000: loss = 7.4833,  smooth loss = 7.1635
+epoch 3 iter 55050: loss = 7.1561,  smooth loss = 7.1752
+epoch 3 iter 55100: loss = 7.4465,  smooth loss = 7.2107
+epoch 3 iter 55150: loss = 6.9852,  smooth loss = 7.2000
+epoch 3 iter 55200: loss = 7.1990,  smooth loss = 7.1986
+epoch 3 iter 55250: loss = 7.3202,  smooth loss = 7.1543
+epoch 3 iter 55300: loss = 7.0685,  smooth loss = 7.1811
+epoch 3 iter 55350: loss = 7.3214,  smooth loss = 7.1839
+epoch 3 iter 55400: loss = 7.6175,  smooth loss = 7.1278
+epoch 3 iter 55450: loss = 7.2187,  smooth loss = 7.1640
+epoch 3 iter 55500: loss = 7.2091,  smooth loss = 7.1332
+epoch 3 iter 55550: loss = 7.1554,  smooth loss = 7.1369
+epoch 3 iter 55600: loss = 7.5657,  smooth loss = 7.1390
+epoch 3 iter 55650: loss = 7.0611,  smooth loss = 7.1224
+epoch 3 iter 55700: loss = 7.3365,  smooth loss = 7.1687
+epoch 3 iter 55750: loss = 6.8563,  smooth loss = 7.1535
+epoch 3 iter 55800: loss = 6.5489,  smooth loss = 7.1108
+epoch 3 iter 55850: loss = 7.1363,  smooth loss = 7.1547
+epoch 3 iter 55900: loss = 7.3475,  smooth loss = 7.1298
+epoch 3 iter 55950: loss = 6.9380,  smooth loss = 7.1223
+epoch 3 iter 56000: loss = 7.3893,  smooth loss = 7.1306
+average data time = 0.0062s, average running time = 0.6226s
+epoch 3 iter 56000: eval loss = 0.5656,  ccr = 0.9348,  cwr = 0.8726,  ted = 812.0000,  ned = 349.1665,  ted/w = 0.1959, 
+Save model conclr-pretrain-vision-model_3_56000
+epoch 3 iter 56050: loss = 7.3310,  smooth loss = 7.1604
+epoch 3 iter 56100: loss = 7.2501,  smooth loss = 7.1255
+epoch 3 iter 56150: loss = 6.9592,  smooth loss = 7.1588
+epoch 3 iter 56200: loss = 7.1159,  smooth loss = 7.1510
+epoch 3 iter 56250: loss = 7.1481,  smooth loss = 7.1168
+epoch 3 iter 56300: loss = 7.1289,  smooth loss = 7.0961
+epoch 3 iter 56350: loss = 7.1858,  smooth loss = 7.1333
+epoch 3 iter 56400: loss = 7.0118,  smooth loss = 7.1242
+epoch 3 iter 56450: loss = 6.9418,  smooth loss = 7.1479
+epoch 3 iter 56500: loss = 6.9219,  smooth loss = 7.1530
+epoch 3 iter 56550: loss = 6.8717,  smooth loss = 7.1683
+epoch 3 iter 56600: loss = 7.0682,  smooth loss = 7.1268
+epoch 3 iter 56650: loss = 7.1859,  smooth loss = 7.1847
+epoch 3 iter 56700: loss = 7.1445,  smooth loss = 7.1543
+epoch 3 iter 56750: loss = 7.0485,  smooth loss = 7.1121
+epoch 3 iter 56800: loss = 7.3018,  smooth loss = 7.1313
+epoch 3 iter 56850: loss = 7.0307,  smooth loss = 7.1262
+epoch 3 iter 56900: loss = 7.1541,  smooth loss = 7.1442
+epoch 3 iter 56950: loss = 7.1159,  smooth loss = 7.1582
+epoch 3 iter 57000: loss = 7.1443,  smooth loss = 7.1613
+epoch 3 iter 57050: loss = 7.1888,  smooth loss = 7.1408
+epoch 3 iter 57100: loss = 7.3802,  smooth loss = 7.1502
+epoch 3 iter 57150: loss = 7.2361,  smooth loss = 7.1378
+epoch 3 iter 57200: loss = 7.2912,  smooth loss = 7.1472
+epoch 3 iter 57250: loss = 7.1416,  smooth loss = 7.1652
+epoch 3 iter 57300: loss = 6.9568,  smooth loss = 7.1291
+epoch 3 iter 57350: loss = 7.1858,  smooth loss = 7.1189
+epoch 3 iter 57400: loss = 7.4823,  smooth loss = 7.1222
+epoch 3 iter 57450: loss = 7.0704,  smooth loss = 7.1367
+epoch 3 iter 57500: loss = 6.9872,  smooth loss = 7.1141
+epoch 3 iter 57550: loss = 7.0594,  smooth loss = 7.1247
+epoch 3 iter 57600: loss = 7.4725,  smooth loss = 7.1371
+epoch 3 iter 57650: loss = 7.2658,  smooth loss = 7.1296
+epoch 3 iter 57700: loss = 7.2760,  smooth loss = 7.1475
+epoch 3 iter 57750: loss = 6.8890,  smooth loss = 7.1221
+epoch 3 iter 57800: loss = 7.1146,  smooth loss = 7.1276
+epoch 3 iter 57850: loss = 7.3461,  smooth loss = 7.1209
+epoch 3 iter 57900: loss = 7.0864,  smooth loss = 7.1209
+epoch 3 iter 57950: loss = 7.1277,  smooth loss = 7.1524
+epoch 3 iter 58000: loss = 7.1152,  smooth loss = 7.1463
+average data time = 0.0061s, average running time = 0.6223s
+epoch 3 iter 58000: eval loss = 0.5671,  ccr = 0.9379,  cwr = 0.8782,  ted = 782.0000,  ned = 314.8374,  ted/w = 0.1887, 
+Better model found at epoch 3, iter 58000 with accuracy value: 0.8782.
+Save model conclr-pretrain-vision-model_3_58000
+epoch 3 iter 58050: loss = 7.1150,  smooth loss = 7.1040
+epoch 3 iter 58100: loss = 7.1258,  smooth loss = 7.1252
+epoch 3 iter 58150: loss = 7.0808,  smooth loss = 7.1169
+epoch 3 iter 58200: loss = 7.3824,  smooth loss = 7.1273
+epoch 3 iter 58250: loss = 6.6667,  smooth loss = 7.1343
+epoch 3 iter 58300: loss = 7.2739,  smooth loss = 7.1711
+epoch 3 iter 58350: loss = 7.4048,  smooth loss = 7.1181
+epoch 3 iter 58400: loss = 7.2684,  smooth loss = 7.1114
+epoch 3 iter 58450: loss = 7.2896,  smooth loss = 7.1136
+epoch 3 iter 58500: loss = 7.2052,  smooth loss = 7.1143
+epoch 3 iter 58550: loss = 6.9620,  smooth loss = 7.0924
+epoch 3 iter 58600: loss = 6.9801,  smooth loss = 7.1277
+epoch 3 iter 58650: loss = 7.0382,  smooth loss = 7.1280
+epoch 3 iter 58700: loss = 7.3430,  smooth loss = 7.1347
+epoch 3 iter 58750: loss = 7.1787,  smooth loss = 7.0784
+epoch 3 iter 58800: loss = 6.9468,  smooth loss = 7.1305
+epoch 3 iter 58850: loss = 6.6903,  smooth loss = 7.1110
+epoch 3 iter 58900: loss = 7.4091,  smooth loss = 7.1500
+epoch 3 iter 58950: loss = 7.0402,  smooth loss = 7.1390
+epoch 3 iter 59000: loss = 7.5206,  smooth loss = 7.1519
+epoch 3 iter 59050: loss = 6.9065,  smooth loss = 7.1508
+epoch 3 iter 59100: loss = 7.0948,  smooth loss = 7.1617
+epoch 3 iter 59150: loss = 7.4176,  smooth loss = 7.1215
+epoch 3 iter 59200: loss = 7.2796,  smooth loss = 7.1392
+epoch 3 iter 59250: loss = 7.2016,  smooth loss = 7.1454
+epoch 3 iter 59300: loss = 7.3711,  smooth loss = 7.1711
+epoch 3 iter 59350: loss = 7.0596,  smooth loss = 7.1672
+epoch 3 iter 59400: loss = 6.9953,  smooth loss = 7.1570
+epoch 3 iter 59450: loss = 6.9371,  smooth loss = 7.1325
+epoch 3 iter 59500: loss = 7.2204,  smooth loss = 7.1483
+epoch 3 iter 59550: loss = 7.2878,  smooth loss = 7.1349
+epoch 3 iter 59600: loss = 6.9945,  smooth loss = 7.1173
+epoch 3 iter 59650: loss = 7.1582,  smooth loss = 7.1956
+epoch 3 iter 59700: loss = 7.1540,  smooth loss = 7.1321
+epoch 3 iter 59750: loss = 6.9974,  smooth loss = 7.1144
+epoch 3 iter 59800: loss = 7.1596,  smooth loss = 7.1255
+epoch 3 iter 59850: loss = 7.0660,  smooth loss = 7.1182
+epoch 3 iter 59900: loss = 6.9422,  smooth loss = 7.1139
+epoch 3 iter 59950: loss = 6.9522,  smooth loss = 7.1293
+epoch 3 iter 60000: loss = 7.2840,  smooth loss = 7.1477
+average data time = 0.0060s, average running time = 0.6220s
+epoch 3 iter 60000: eval loss = 0.5123,  ccr = 0.9430,  cwr = 0.8895,  ted = 737.0000,  ned = 301.9787,  ted/w = 0.1778, 
+Better model found at epoch 3, iter 60000 with accuracy value: 0.8895.
+Save model conclr-pretrain-vision-model_3_60000
+epoch 3 iter 60050: loss = 7.2704,  smooth loss = 7.1404
+epoch 3 iter 60100: loss = 7.3411,  smooth loss = 7.1437
+epoch 3 iter 60150: loss = 7.1546,  smooth loss = 7.1105
+epoch 3 iter 60200: loss = 7.0007,  smooth loss = 7.1431
+epoch 3 iter 60250: loss = 7.1515,  smooth loss = 7.1566
+epoch 3 iter 60300: loss = 7.1382,  smooth loss = 7.1664
+epoch 3 iter 60350: loss = 7.6150,  smooth loss = 7.1469
+epoch 3 iter 60400: loss = 7.3886,  smooth loss = 7.1238
+epoch 3 iter 60450: loss = 7.2401,  smooth loss = 7.1436
+epoch 3 iter 60500: loss = 7.1499,  smooth loss = 7.1133
+epoch 3 iter 60550: loss = 7.4055,  smooth loss = 7.1198
+epoch 3 iter 60600: loss = 7.2248,  smooth loss = 7.0827
+epoch 3 iter 60650: loss = 6.9406,  smooth loss = 7.0981
+epoch 3 iter 60700: loss = 7.1456,  smooth loss = 7.1520
+epoch 3 iter 60750: loss = 7.2288,  smooth loss = 7.1401
+epoch 3 iter 60800: loss = 7.3231,  smooth loss = 7.1368
+epoch 3 iter 60850: loss = 7.2657,  smooth loss = 7.1157
+epoch 3 iter 60900: loss = 7.4559,  smooth loss = 7.1368
+epoch 3 iter 60950: loss = 7.1415,  smooth loss = 7.1374
+epoch 3 iter 61000: loss = 7.1009,  smooth loss = 7.1347
+epoch 3 iter 61050: loss = 7.1651,  smooth loss = 7.1096
+epoch 3 iter 61100: loss = 7.1211,  smooth loss = 7.1118
+epoch 3 iter 61150: loss = 7.0784,  smooth loss = 7.1159
+epoch 3 iter 61200: loss = 7.2636,  smooth loss = 7.0858
+epoch 3 iter 61250: loss = 7.3243,  smooth loss = 7.1313
+epoch 3 iter 61300: loss = 7.2875,  smooth loss = 7.1498
+epoch 3 iter 61350: loss = 7.4725,  smooth loss = 7.1468
+epoch 3 iter 61400: loss = 7.2119,  smooth loss = 7.1252
+epoch 3 iter 61450: loss = 6.8151,  smooth loss = 7.1310
+epoch 3 iter 61500: loss = 6.7980,  smooth loss = 7.1068
+epoch 3 iter 61550: loss = 7.0690,  smooth loss = 7.1091
+epoch 3 iter 61600: loss = 7.1955,  smooth loss = 7.1351
+epoch 3 iter 61650: loss = 6.9465,  smooth loss = 7.1412
+epoch 3 iter 61700: loss = 7.0744,  smooth loss = 7.1447
+epoch 3 iter 61750: loss = 7.1739,  smooth loss = 7.1804
+epoch 3 iter 61800: loss = 7.0224,  smooth loss = 7.1232
+epoch 3 iter 61850: loss = 6.8217,  smooth loss = 7.1537
+epoch 3 iter 61900: loss = 7.2616,  smooth loss = 7.1262
+epoch 3 iter 61950: loss = 7.0687,  smooth loss = 7.1176
+epoch 3 iter 62000: loss = 7.2845,  smooth loss = 7.1478
+average data time = 0.0058s, average running time = 0.6220s
+epoch 3 iter 62000: eval loss = 0.5672,  ccr = 0.9355,  cwr = 0.8835,  ted = 768.0000,  ned = 314.6914,  ted/w = 0.1853, 
+Save model conclr-pretrain-vision-model_3_62000
+epoch 3 iter 62050: loss = 6.9795,  smooth loss = 7.1222
+epoch 3 iter 62100: loss = 6.8444,  smooth loss = 7.1139
+epoch 3 iter 62150: loss = 7.0572,  smooth loss = 7.1382
+epoch 3 iter 62200: loss = 6.9335,  smooth loss = 7.1043
+epoch 3 iter 62250: loss = 7.1082,  smooth loss = 7.1323
+epoch 3 iter 62300: loss = 6.9051,  smooth loss = 7.1517
+epoch 3 iter 62350: loss = 7.5917,  smooth loss = 7.1574
+epoch 3 iter 62400: loss = 6.9662,  smooth loss = 7.1248
+epoch 3 iter 62450: loss = 7.2492,  smooth loss = 7.0914
+epoch 3 iter 62500: loss = 7.4132,  smooth loss = 7.0614
+epoch 3 iter 62550: loss = 7.0694,  smooth loss = 7.0769
+epoch 3 iter 62600: loss = 7.3565,  smooth loss = 7.1091
+epoch 3 iter 62650: loss = 6.9058,  smooth loss = 7.1307
+epoch 3 iter 62700: loss = 7.2582,  smooth loss = 7.1249
+epoch 3 iter 62750: loss = 7.2714,  smooth loss = 7.1304
+epoch 3 iter 62800: loss = 7.2407,  smooth loss = 7.1108
+epoch 3 iter 62850: loss = 7.3668,  smooth loss = 7.1748
+epoch 3 iter 62900: loss = 7.2802,  smooth loss = 7.1550
+epoch 3 iter 62950: loss = 7.2137,  smooth loss = 7.1565
+epoch 3 iter 63000: loss = 6.7789,  smooth loss = 7.1290
+epoch 3 iter 63050: loss = 6.9777,  smooth loss = 7.1155
+epoch 3 iter 63100: loss = 7.3903,  smooth loss = 7.1359
+epoch 3 iter 63150: loss = 6.9994,  smooth loss = 7.1376
+epoch 3 iter 63200: loss = 7.1333,  smooth loss = 7.1000
+epoch 3 iter 63250: loss = 7.1773,  smooth loss = 7.1456
+epoch 3 iter 63300: loss = 7.4684,  smooth loss = 7.1589
+epoch 3 iter 63350: loss = 7.1775,  smooth loss = 7.1677
+epoch 3 iter 63400: loss = 6.9840,  smooth loss = 7.1315
+epoch 3 iter 63450: loss = 7.3436,  smooth loss = 7.1139
+epoch 3 iter 63500: loss = 7.2340,  smooth loss = 7.1486
+epoch 3 iter 63550: loss = 6.9427,  smooth loss = 7.1260
+epoch 3 iter 63600: loss = 7.1918,  smooth loss = 7.1322
+epoch 3 iter 63650: loss = 7.3079,  smooth loss = 7.1257
+epoch 3 iter 63700: loss = 7.1414,  smooth loss = 7.0939
+epoch 3 iter 63750: loss = 6.8591,  smooth loss = 7.1030
+epoch 3 iter 63800: loss = 6.7223,  smooth loss = 7.0833
+epoch 3 iter 63850: loss = 7.2456,  smooth loss = 7.1034
+epoch 3 iter 63900: loss = 7.0872,  smooth loss = 7.1286
+epoch 3 iter 63950: loss = 7.5545,  smooth loss = 7.1476
+epoch 3 iter 64000: loss = 7.1555,  smooth loss = 7.1782
+average data time = 0.0057s, average running time = 0.6221s
+epoch 3 iter 64000: eval loss = 0.5103,  ccr = 0.9447,  cwr = 0.8777,  ted = 800.0000,  ned = 370.9846,  ted/w = 0.1930, 
+Save model conclr-pretrain-vision-model_3_64000
+epoch 3 iter 64050: loss = 7.0907,  smooth loss = 7.1421
+epoch 3 iter 64100: loss = 7.5251,  smooth loss = 7.1204
+epoch 3 iter 64150: loss = 7.4460,  smooth loss = 7.1210
+epoch 3 iter 64200: loss = 7.4835,  smooth loss = 7.0930
+epoch 3 iter 64250: loss = 7.0757,  smooth loss = 7.1293
+epoch 3 iter 64300: loss = 7.1307,  smooth loss = 7.1290
+epoch 3 iter 64350: loss = 7.4352,  smooth loss = 7.1456
+epoch 3 iter 64400: loss = 7.0659,  smooth loss = 7.1283
+epoch 3 iter 64450: loss = 7.4139,  smooth loss = 7.1357
+epoch 3 iter 64500: loss = 6.9252,  smooth loss = 7.0895
+epoch 3 iter 64550: loss = 6.8379,  smooth loss = 7.1348
+epoch 3 iter 64600: loss = 7.6053,  smooth loss = 7.1419
+epoch 3 iter 64650: loss = 7.3379,  smooth loss = 7.1237
+epoch 3 iter 64700: loss = 7.1664,  smooth loss = 7.1428
+epoch 3 iter 64750: loss = 6.7763,  smooth loss = 7.1390
+epoch 3 iter 64800: loss = 7.2399,  smooth loss = 7.1587
+epoch 3 iter 64850: loss = 7.0094,  smooth loss = 7.1640
+epoch 3 iter 64900: loss = 7.1811,  smooth loss = 7.1293
+epoch 3 iter 64950: loss = 6.8987,  smooth loss = 7.1255
+epoch 3 iter 65000: loss = 7.5376,  smooth loss = 7.1351
+epoch 3 iter 65050: loss = 7.1154,  smooth loss = 7.1337
+epoch 3 iter 65100: loss = 7.5992,  smooth loss = 7.1594
+epoch 3 iter 65150: loss = 7.2847,  smooth loss = 7.1528
+epoch 3 iter 65200: loss = 7.0447,  smooth loss = 7.1179
+epoch 3 iter 65250: loss = 7.2356,  smooth loss = 7.1597
+epoch 3 iter 65300: loss = 7.0111,  smooth loss = 7.1212
+epoch 3 iter 65350: loss = 7.0221,  smooth loss = 7.0979
+epoch 3 iter 65400: loss = 6.7623,  smooth loss = 7.0878
+epoch 3 iter 65450: loss = 7.1350,  smooth loss = 7.0874
+epoch 3 iter 65500: loss = 7.1077,  smooth loss = 7.1156
+epoch 3 iter 65550: loss = 7.0697,  smooth loss = 7.1425
+epoch 3 iter 65600: loss = 6.9637,  smooth loss = 7.1448
+epoch 3 iter 65650: loss = 7.1705,  smooth loss = 7.1119
+epoch 3 iter 65700: loss = 7.3003,  smooth loss = 7.1295
+epoch 3 iter 65750: loss = 7.0082,  smooth loss = 7.1137
+epoch 3 iter 65800: loss = 6.8406,  smooth loss = 7.0941
+epoch 3 iter 65850: loss = 7.0669,  smooth loss = 7.0979
+epoch 3 iter 65900: loss = 7.3653,  smooth loss = 7.0998
+epoch 3 iter 65950: loss = 7.2252,  smooth loss = 7.1422
+epoch 3 iter 66000: loss = 6.9506,  smooth loss = 7.1417
+average data time = 0.0056s, average running time = 0.6222s
+epoch 3 iter 66000: eval loss = 0.5309,  ccr = 0.9394,  cwr = 0.8774,  ted = 791.0000,  ned = 337.2308,  ted/w = 0.1908, 
+Save model conclr-pretrain-vision-model_3_66000
+epoch 3 iter 66050: loss = 7.1957,  smooth loss = 7.1381
+epoch 3 iter 66100: loss = 7.4459,  smooth loss = 7.1436
+epoch 3 iter 66150: loss = 7.8712,  smooth loss = 7.1659
+epoch 3 iter 66200: loss = 7.4350,  smooth loss = 7.1928
+epoch 3 iter 66250: loss = 6.8830,  smooth loss = 7.1613
+epoch 3 iter 66300: loss = 6.8419,  smooth loss = 7.1116
+epoch 3 iter 66350: loss = 6.9845,  smooth loss = 7.1243
+epoch 3 iter 66400: loss = 7.2854,  smooth loss = 7.1534
+epoch 3 iter 66450: loss = 7.4248,  smooth loss = 7.1484
+epoch 3 iter 66500: loss = 7.0187,  smooth loss = 7.1174
+epoch 3 iter 66550: loss = 6.9583,  smooth loss = 7.1032
+epoch 3 iter 66600: loss = 6.7951,  smooth loss = 7.1245
+epoch 3 iter 66650: loss = 7.1692,  smooth loss = 7.1084
+epoch 3 iter 66700: loss = 7.1517,  smooth loss = 7.1190
+epoch 3 iter 66750: loss = 7.4668,  smooth loss = 7.1266
+epoch 3 iter 66800: loss = 7.0019,  smooth loss = 7.1279
+epoch 3 iter 66850: loss = 7.1836,  smooth loss = 7.1316
+epoch 3 iter 66900: loss = 7.0523,  smooth loss = 7.1736
+epoch 3 iter 66950: loss = 7.0793,  smooth loss = 7.1157
+epoch 3 iter 67000: loss = 7.0576,  smooth loss = 7.1173
+epoch 3 iter 67050: loss = 6.7213,  smooth loss = 7.0900
+epoch 3 iter 67100: loss = 7.1232,  smooth loss = 7.1159
+epoch 3 iter 67150: loss = 7.3420,  smooth loss = 7.1385
+epoch 3 iter 67200: loss = 7.1854,  smooth loss = 7.1466
+epoch 3 iter 67250: loss = 7.1492,  smooth loss = 7.1404
+epoch 3 iter 67300: loss = 7.3849,  smooth loss = 7.1293
+epoch 3 iter 67350: loss = 6.9854,  smooth loss = 7.1293
+epoch 3 iter 67400: loss = 7.1407,  smooth loss = 7.1174
+epoch 3 iter 67450: loss = 7.2294,  smooth loss = 7.1027
+epoch 3 iter 67500: loss = 7.0966,  smooth loss = 7.1286
+epoch 3 iter 67550: loss = 7.1576,  smooth loss = 7.1391
+epoch 3 iter 67600: loss = 7.1127,  smooth loss = 7.1075
+epoch 3 iter 67650: loss = 7.2605,  smooth loss = 7.1150
+epoch 3 iter 67700: loss = 6.9979,  smooth loss = 7.1306
+epoch 3 iter 67750: loss = 7.0404,  smooth loss = 7.1058
+epoch 3 iter 67800: loss = 7.0918,  smooth loss = 7.1429
+epoch 3 iter 67850: loss = 7.0061,  smooth loss = 7.1324
+epoch 3 iter 67900: loss = 6.9989,  smooth loss = 7.1303
+epoch 3 iter 67950: loss = 7.4586,  smooth loss = 7.1583
+epoch 3 iter 68000: loss = 7.2448,  smooth loss = 7.1485
+average data time = 0.0055s, average running time = 0.6224s
+epoch 3 iter 68000: eval loss = 0.5074,  ccr = 0.9464,  cwr = 0.8806,  ted = 752.0000,  ned = 323.7926,  ted/w = 0.1814, 
+Save model conclr-pretrain-vision-model_3_68000
+epoch 3 iter 68050: loss = 7.2631,  smooth loss = 7.0860
+epoch 3 iter 68100: loss = 6.9417,  smooth loss = 7.0693
+epoch 3 iter 68150: loss = 6.7395,  smooth loss = 7.0927
+epoch 3 iter 68200: loss = 6.8641,  smooth loss = 7.0779
+epoch 3 iter 68250: loss = 7.2294,  smooth loss = 7.0888
+epoch 3 iter 68300: loss = 7.0293,  smooth loss = 7.0831
+epoch 3 iter 68350: loss = 7.1731,  smooth loss = 7.1204
+epoch 3 iter 68400: loss = 6.9189,  smooth loss = 7.0678
+epoch 3 iter 68450: loss = 6.9625,  smooth loss = 7.1188
+epoch 3 iter 68500: loss = 7.0479,  smooth loss = 7.1139
+epoch 3 iter 68550: loss = 7.2568,  smooth loss = 7.0895
+epoch 3 iter 68600: loss = 7.3822,  smooth loss = 7.0874
+epoch 3 iter 68650: loss = 7.2032,  smooth loss = 7.1207
+epoch 3 iter 68700: loss = 7.2358,  smooth loss = 7.1244
+epoch 3 iter 68750: loss = 7.1032,  smooth loss = 7.1104
+epoch 3 iter 68800: loss = 6.9016,  smooth loss = 7.1183
+epoch 3 iter 68850: loss = 7.2485,  smooth loss = 7.1126
+epoch 3 iter 68900: loss = 7.3312,  smooth loss = 7.0931
+epoch 3 iter 68950: loss = 7.0049,  smooth loss = 7.1350
+epoch 3 iter 69000: loss = 7.2230,  smooth loss = 7.1283
+epoch 3 iter 69050: loss = 7.2541,  smooth loss = 7.1088
+epoch 3 iter 69100: loss = 7.1072,  smooth loss = 7.1458
+epoch 3 iter 69150: loss = 7.2233,  smooth loss = 7.1269
+epoch 3 iter 69200: loss = 7.2754,  smooth loss = 7.1201
+epoch 3 iter 69250: loss = 6.9639,  smooth loss = 7.1080
+epoch 3 iter 69300: loss = 7.0209,  smooth loss = 7.1411
+epoch 3 iter 69350: loss = 6.9293,  smooth loss = 7.1464
+epoch 3 iter 69400: loss = 7.0157,  smooth loss = 7.1288
+epoch 3 iter 69450: loss = 6.8871,  smooth loss = 7.0904
+epoch 3 iter 69500: loss = 6.9714,  smooth loss = 7.1095
+epoch 3 iter 69550: loss = 7.3668,  smooth loss = 7.1149
+epoch 3 iter 69600: loss = 6.9827,  smooth loss = 7.0996
+epoch 3 iter 69650: loss = 6.9848,  smooth loss = 7.0986
+epoch 3 iter 69700: loss = 7.1201,  smooth loss = 7.1316
+epoch 3 iter 69750: loss = 6.9091,  smooth loss = 7.1094
+epoch 3 iter 69800: loss = 7.4422,  smooth loss = 7.1307
+epoch 3 iter 69850: loss = 7.1002,  smooth loss = 7.1180
+epoch 3 iter 69900: loss = 7.2157,  smooth loss = 7.1339
+epoch 3 iter 69950: loss = 7.1339,  smooth loss = 7.1029
+epoch 3 iter 70000: loss = 7.1902,  smooth loss = 7.0959
+average data time = 0.0054s, average running time = 0.6225s
+epoch 3 iter 70000: eval loss = 0.4882,  ccr = 0.9433,  cwr = 0.8830,  ted = 760.0000,  ned = 316.2612,  ted/w = 0.1834, 
+Save model conclr-pretrain-vision-model_3_70000
+epoch 3 iter 70050: loss = 7.0596,  smooth loss = 7.0857
+epoch 3 iter 70100: loss = 7.0804,  smooth loss = 7.1000
+epoch 3 iter 70150: loss = 6.7926,  smooth loss = 7.1018
+epoch 3 iter 70200: loss = 6.9350,  smooth loss = 7.1249
+epoch 3 iter 70250: loss = 6.8635,  smooth loss = 7.1133
+epoch 3 iter 70300: loss = 6.9716,  smooth loss = 7.1163
+epoch 3 iter 70350: loss = 7.2159,  smooth loss = 7.1106
+epoch 3 iter 70400: loss = 6.8746,  smooth loss = 7.1082
+epoch 3 iter 70450: loss = 6.8182,  smooth loss = 7.1114
+epoch 3 iter 70500: loss = 7.3688,  smooth loss = 7.1560
+epoch 3 iter 70550: loss = 6.8385,  smooth loss = 7.1466
+epoch 3 iter 70600: loss = 7.1728,  smooth loss = 7.0985
+epoch 3 iter 70650: loss = 7.1248,  smooth loss = 7.0953
+epoch 3 iter 70700: loss = 6.9693,  smooth loss = 7.0805
+epoch 3 iter 70750: loss = 6.9980,  smooth loss = 7.0906
+epoch 3 iter 70800: loss = 7.1588,  smooth loss = 7.1269
+epoch 3 iter 70850: loss = 7.4622,  smooth loss = 7.1205
+epoch 3 iter 70900: loss = 7.1050,  smooth loss = 7.1040
+epoch 3 iter 70950: loss = 6.7799,  smooth loss = 7.1113
+epoch 3 iter 71000: loss = 7.1610,  smooth loss = 7.0892
+epoch 3 iter 71050: loss = 7.0807,  smooth loss = 7.1229
+epoch 3 iter 71100: loss = 7.1159,  smooth loss = 7.1009
+epoch 3 iter 71150: loss = 6.9239,  smooth loss = 7.1209
+epoch 3 iter 71200: loss = 6.9447,  smooth loss = 7.1273
+epoch 3 iter 71250: loss = 7.2323,  smooth loss = 7.1348
+epoch 3 iter 71300: loss = 7.4064,  smooth loss = 7.1358
+epoch 3 iter 71350: loss = 7.2602,  smooth loss = 7.1325
+epoch 3 iter 71400: loss = 7.1429,  smooth loss = 7.1486
+epoch 3 iter 71450: loss = 7.6192,  smooth loss = 7.1449
+epoch 3 iter 71500: loss = 7.0124,  smooth loss = 7.1245
+epoch 3 iter 71550: loss = 7.1001,  smooth loss = 7.0959
+epoch 3 iter 71600: loss = 7.0283,  smooth loss = 7.0980
+epoch 3 iter 71650: loss = 7.1414,  smooth loss = 7.0902
+epoch 3 iter 71700: loss = 7.0844,  smooth loss = 7.0937
+epoch 3 iter 71750: loss = 7.0154,  smooth loss = 7.0974
+epoch 3 iter 71800: loss = 7.0889,  smooth loss = 7.1252
+epoch 3 iter 71850: loss = 7.2075,  smooth loss = 7.1293
+epoch 3 iter 71900: loss = 7.2560,  smooth loss = 7.1402
+epoch 3 iter 71950: loss = 6.7701,  smooth loss = 7.1093
+epoch 3 iter 72000: loss = 6.8781,  smooth loss = 7.0754
+average data time = 0.0053s, average running time = 0.6228s
+epoch 3 iter 72000: eval loss = 0.5244,  ccr = 0.9471,  cwr = 0.8895,  ted = 712.0000,  ned = 303.8096,  ted/w = 0.1718, 
+Save model conclr-pretrain-vision-model_3_72000
+epoch 3 iter 72050: loss = 7.2188,  smooth loss = 7.1208
+epoch 3 iter 72100: loss = 7.1463,  smooth loss = 7.1346
+epoch 3 iter 72150: loss = 6.9719,  smooth loss = 7.1080
+epoch 3 iter 72200: loss = 7.3721,  smooth loss = 7.1255
+epoch 3 iter 72250: loss = 7.5063,  smooth loss = 7.1226
+epoch 3 iter 72300: loss = 6.7197,  smooth loss = 7.0797
+epoch 3 iter 72350: loss = 7.4756,  smooth loss = 7.1203
+epoch 3 iter 72400: loss = 7.3323,  smooth loss = 7.1337

@@ -302,7 +302,7 @@ For model evaluation to demonstrate effectiveness of reproduction, I trained the
 ConCLR-Vision and ABInet-Vision models using same training settings. Due to
 constraints on time and computational resources, both models were trained on the
 ST dataset for 4 epochs using four NVIDIA 2080 Ti GPUs (on AutoDL 🥲). The learning
-rate was initialized at 1e-4 and decayed to 1e-6 by the final epoch.
+rate was initialized at 1e-4 and decayed to 1e-5 by the final epoch.
 
 #+BEGIN_HTML
 <table>
@@ -315,18 +315,18 @@ rate was initialized at 1e-4 and decayed to 1e-6 by the final epoch.
   <tr>
     <td rowspan="3" style="text-align: center;">conclr-vision</td>
     <td>IIIT5k</td>
-    <td>0.943</td>
-    <td>0.836</td>
+    <td>0.942</td>
+    <td>0.891</td>
   </tr>
   <tr>
     <td>IC13</td>
-    <td>0.948</td>
-    <td>0.834</td>
+    <td>0.963</td>
+    <td>0.890</td>
   </tr>
   <tr>
     <td>CUTE80</td>
-    <td>0.814</td>
-    <td>0.875</td>
+    <td>0.928</td>
+    <td>0.910</td>
   </tr>
   <tr>
     <td rowspan="3" style="text-align: center;">abinet-vision</td>
@@ -347,15 +347,18 @@ rate was initialized at 1e-4 and decayed to 1e-6 by the final epoch.
 </table>
 #+END_HTML
 
-From the results, using ConCLR has shown an improvement in CCR compared to the
-baseline. I attribute this to the effectiveness of contrastive loss and ConAug.
-However, the performance of CWR metrics was not satisfactory, possibly due to
-the small size of the training dataset. Typically, methods involving contrastive
-learning require larger datasets and more training time for optimization.
-(Alternatively, there might be errors in my implementation, and I would greatly
-appreciate any feedback on this matter 🥰)
+The results indicate that using ConCLR led to significant improvements in both
+CCR and CWR. However, this experiment was conducted on a dataset that was not
+sufficiently large, and the training duration was relatively short. Due to
+resource constraints, I have not been able to conduct a more comprehensive
+experiment now, More comprehensive experiments are underway...
 
-More comprehensive experiments are underway...
+btw, the training log are stored in the "log/" directory, you can visit it
+through tensorboard or just look at the .txt file.
+
+(There might be errors in my implementation, and I would greatly appreciate any
+feedback on this matter 🥰)
+
 
 ** Conference
 [[https://github.com/FangShancheng/ABINet][FangShancheng/ABINet]]
