@@ -162,7 +162,8 @@ flycheck_*.el
 .vscode
 
 # data
-data
+data/training/
+data/evaluation/
 
 # workdir
 workdir*

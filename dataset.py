@@ -127,6 +127,8 @@ class ImageLMDBDataset(Dataset):
             image_key, label_key = f"image-{idx + 1:09d}", f"label-{idx + 1:09d}"
             try:
                 label = str(txn.get(label_key.encode()), "utf-8").strip()  # label
+                if not self.case_sensitive:
+                    label = label.lower()
                 if not set(label).issubset(self.character):
                     return self._next_image(idx)
                 # label = re.sub('[^0-9a-zA-Z]+', '', label)
